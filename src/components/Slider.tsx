@@ -79,11 +79,11 @@ const Slider: React.FC<SliderProps> = ({ slides }) => {
   };
 
   return (
-    <div className="bg-[#F0EBE6] dark:bg-[#2A2D36] p-6 md:p-8 flex flex-col justify-between h-full">
-      <div className="max-w-3xl w-full mx-auto flex flex-col h-full pt-8 md:pt-20">
+    <div className="bg-[#F0EBE6] dark:bg-[#2A2D36] p-6 md:p-8 h-[500px] md:h-[600px]">
+      <div className="max-w-3xl w-full mx-auto h-full flex flex-col relative pt-8 md:pt-20">
         {/* Content container */}
-        <div className="flex-grow relative">
-          <div className="min-h-[300px] md:h-[300px]">
+        <div className="flex-grow relative overflow-hidden">
+          <div className="absolute inset-0">
             <div className={getTransitionClasses()}>
               <h2 className="text-[#FF3B31] dark:text-[#FF7A6E] font-serif text-[28px] xs:text-[32px] sm:text-[38px] md:text-[54px] mb-4 md:mb-6 leading-tight text-left">
                 {renderSlideTitle(slides[currentSlide].title, slides[currentSlide].titleBold)}
@@ -96,7 +96,7 @@ const Slider: React.FC<SliderProps> = ({ slides }) => {
         </div>
         
         {/* Navigation buttons */}
-        <div className="flex justify-center gap-4 mt-4 md:mt-12">
+        <div className="flex justify-center gap-4 py-4">
           <button 
             onClick={handlePrevSlide}
             className="text-[#FF3B31] dark:text-[#FF7A6E] hover:opacity-70 transition-opacity duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF3B31] dark:focus:ring-[#FF7A6E] rounded-md p-2"
