@@ -159,7 +159,7 @@ const VideoSection: React.FC = () => {
             </div>
           </div>
           
-          <div className="bg-[#A1DFD4] dark:bg-[#3A3D45] flex items-center justify-center p-4">
+          <div className="bg-[#FFEB94] dark:bg-[#3A3D45] flex items-center justify-center p-4">
             <div className="w-full max-w-xs">
               <IndustryTerm term={randomTerm} />
             </div>

@@ -24,7 +24,7 @@ const ContactForm: React.FC = () => {
   }, [message]);
 
   return (
-    <div className="bg-[#A1DFD4] dark:bg-[#3A3D45] p-8 h-full">
+    <div className="bg-[#FFEB94] dark:bg-[#3A3D45] p-8 h-full">
       <h3 className="text-[#FF3B31] dark:text-[#FFEB94] font-medium uppercase text-lg mb-5" id="contact-form-heading">
         DROP US A LINE...
       </h3>

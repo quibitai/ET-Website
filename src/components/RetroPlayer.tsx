@@ -1,8 +1,23 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useRetro } from '../contexts/RetroContext';
 
 const RetroPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const { isRetro } = useRetro();
+
+  useEffect(() => {
+    if (isRetro && audioRef.current) {
+      audioRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch((error) => {
+          console.log('Autoplay prevented:', error);
+          setIsPlaying(false);
+        });
+    }
+  }, [isRetro]);
 
   const togglePlay = () => {
     if (audioRef.current) {
