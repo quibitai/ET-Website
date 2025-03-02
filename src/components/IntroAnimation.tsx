@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface IntroAnimationProps {
@@ -6,67 +6,62 @@ interface IntroAnimationProps {
 }
 
 const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) => {
-  const [animationStage, setAnimationStage] = useState<"initial" | "zoom" | "explode" | "complete">("initial");
+  const [animationStage, setAnimationStage] = useState<"initial" | "zoom" | "shake" | "explode" | "complete">("initial");
   const hasRunRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // For debugging
+  // Reset the animation stage when the component is mounted
   useEffect(() => {
-    console.log("IntroAnimation mounted");
-    
-    // Reset the animation stage when the component is mounted
     setAnimationStage("initial");
     
-    // Clean up function
+    // Reset the ref when component unmounts to allow animation to run again on next mount
     return () => {
-      console.log("IntroAnimation unmounting");
-      // Reset the ref when component unmounts to allow animation to run again on next mount
       hasRunRef.current = false;
     };
   }, []);
   
-  // For debugging animation stages
-  useEffect(() => {
-    console.log("Animation stage changed to:", animationStage);
-  }, [animationStage]);
-  
-  useEffect(() => {
+  // Animation sequence with useCallback to prevent unnecessary recreations
+  const runAnimationSequence = useCallback(async () => {
     // Prevent running the animation sequence more than once per component instance
-    if (hasRunRef.current) {
-      console.log("Animation sequence already ran for this instance, skipping");
-      return;
-    }
+    if (hasRunRef.current) return;
     
-    // Start the animation sequence
-    const sequence = async () => {
-      console.log("Starting animation sequence");
-      hasRunRef.current = true;
-      
-      // Wait for component to mount
-      await new Promise(resolve => setTimeout(resolve, 800));
-      console.log("Setting zoom stage");
-      
-      // Start zoom animation
-      setAnimationStage("zoom");
-      
-      // After zoom completes, start explosion animation
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log("Setting explode stage");
-      setAnimationStage("explode");
-      
-      // After explosion starts, signal completion
-      await new Promise(resolve => setTimeout(resolve, 500));
-      console.log("Calling onAnimationComplete");
-      onAnimationComplete();
-      
-      // Keep the animation component visible until the main content is fully loaded
-      await new Promise(resolve => setTimeout(resolve, 1800));
-      console.log("Setting complete stage");
-      setAnimationStage("complete");
-    };
+    hasRunRef.current = true;
     
-    sequence();
+    // Wait for component to mount
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    // Start zoom animation
+    setAnimationStage("zoom");
+    
+    // After zoom completes, start shake animation
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setAnimationStage("shake");
+    
+    // After shake animation, start explosion
+    await new Promise(resolve => setTimeout(resolve, 800));
+    setAnimationStage("explode");
+    
+    // After explosion starts, signal completion
+    await new Promise(resolve => setTimeout(resolve, 500));
+    onAnimationComplete();
+    
+    // Keep the animation component visible until the main content is fully loaded
+    await new Promise(resolve => setTimeout(resolve, 1800));
+    setAnimationStage("complete");
   }, [onAnimationComplete]);
+  
+  // Start animation sequence on mount
+  useEffect(() => {
+    runAnimationSequence();
+    
+    // Add support for reduced motion preference
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) {
+      // Skip directly to completion for users who prefer reduced motion
+      setAnimationStage("complete");
+      onAnimationComplete();
+    }
+  }, [runAnimationSequence, onAnimationComplete]);
 
   // Define the letters of "echotango"
   const letters = "echotango".split("");
@@ -79,6 +74,76 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
     rotate: Math.random() * 1080 - 540,
     scale: Math.random() * 1.5 + 0.5
   })));
+
+  // Get container animation based on current stage
+  const getContainerAnimation = () => {
+    if (animationStage === "zoom") {
+      return { 
+        scale: [1, 1.5, 2.2, 2.5, 2.8] 
+      };
+    } else if (animationStage === "shake") {
+      return {
+        scale: 2.8,
+        x: [0, -10, 12, -15, 15, -12, 10, -8, 8, -5, 5, 0],
+        y: [0, 5, -6, 8, -8, 6, -4, 4, -2, 2, 0],
+        rotate: [0, -2, 3, -3, 3, -2, 2, -1, 1, 0]
+      };
+    }
+    return { scale: 2.8 };
+  };
+
+  // Get transition for the container based on animation stage
+  const getContainerTransition = () => {
+    if (animationStage === "zoom") {
+      return {
+        duration: 2.0,
+        ease: [0.25, 0.1, 0.25, 1.0],
+        times: [0, 0.2, 0.5, 0.7, 1]
+      };
+    } else if (animationStage === "shake") {
+      return {
+        duration: 0.8,
+        ease: "easeInOut",
+        times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+      };
+    }
+    return { duration: 0.5 };
+  };
+
+  // Get text animation properties based on current stage
+  const getTextAnimation = () => {
+    // Always maintain the same font size after initial zoom
+    if (animationStage === "initial") {
+      return {
+        fontSize: "2rem",
+        opacity: 0
+      };
+    } else if (animationStage === "zoom") {
+      return {
+        fontSize: "6rem",
+        opacity: 1
+      };
+    } else {
+      return {
+        fontSize: "6rem", // Keep font size consistent after zoom
+        opacity: 1
+      };
+    }
+  };
+
+  // Get text transition properties based on current stage
+  const getTextTransition = () => {
+    if (animationStage === "zoom") {
+      return {
+        duration: 2.0,
+        ease: [0.25, 0.1, 0.25, 1.0]
+      };
+    }
+    return {
+      duration: 0.5,
+      ease: "easeInOut"
+    };
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -95,41 +160,30 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
             ease: "easeInOut",
             opacity: { delay: 1.2 }
           }}
+          aria-live="polite"
+          aria-atomic="true"
+          role="status"
         >
           {animationStage !== "explode" ? (
             <motion.div
               ref={containerRef}
               className="relative"
               initial={{ scale: 1 }}
-              animate={{ 
-                scale: animationStage === "zoom" ? [1, 1.5, 2.2, 2.5, 2.8] : 1,
-              }}
-              transition={{ 
-                duration: 2.0,
-                ease: [0.25, 0.1, 0.25, 1.0], // Improved easing for smoother zoom
-                times: [0, 0.2, 0.5, 0.7, 1]
-              }}
+              animate={getContainerAnimation()}
+              transition={getContainerTransition()}
             >
               <motion.h1 
                 className="text-[#FF3B31] dark:text-[#FF7A6E] font-bold tracking-tighter"
-                initial={{ 
-                  fontSize: "2rem",
-                  opacity: animationStage === "initial" ? 0 : 1,
-                }}
-                animate={{ 
-                  fontSize: animationStage === "zoom" ? "6rem" : "2rem",
-                  opacity: 1,
-                }}
-                transition={{ 
-                  duration: animationStage === "zoom" ? 2.0 : 1.5,
-                  ease: [0.25, 0.1, 0.25, 1.0], // Improved easing for smoother zoom
-                }}
+                initial={{ fontSize: "2rem", opacity: 0 }}
+                animate={getTextAnimation()}
+                transition={getTextTransition()}
+                aria-label="Echo Tango logo animation"
               >
                 echotango
               </motion.h1>
             </motion.div>
           ) : (
-            <div className="relative">
+            <div className="relative" aria-label="Echo Tango logo exploding animation">
               {letters.map((letter, index) => (
                 <motion.span
                   key={index}
@@ -160,6 +214,7 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
                     ease: [0.16, 1, 0.3, 1], // Improved easing for smoother explosion
                     delay: index * 0.02 // Slightly reduced for more simultaneous explosion
                   }}
+                  aria-hidden="true" // Hide from screen readers as it's decorative
                 >
                   {letter}
                 </motion.span>
@@ -172,4 +227,4 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
   );
 };
 
-export default IntroAnimation; 
+export default React.memo(IntroAnimation); 

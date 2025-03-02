@@ -7,7 +7,7 @@ interface IndustryTermProps {
 
 const IndustryTerm: React.FC<IndustryTermProps> = ({ term }) => {
   return (
-    <div className="text-[#FF3B31] dark:text-[#FFEB94] text-center">
+    <div className="text-[#FF3B31] dark:text-[#FFEB94] text-left">
       <div className="font-bold text-lg mb-2">{term.term}</div>
       <div className="text-sm dark:text-[#FFEB94]/80">{term.definition}</div>
     </div>
