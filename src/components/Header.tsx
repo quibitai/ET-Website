@@ -53,13 +53,15 @@ const Header: React.FC<HeaderProps> = ({ initiallyHidden = false }) => {
             <TooltipTrigger asChild>
               <button 
                 onClick={toggleRetro}
-                className={`w-5 h-5 rounded-full transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand dark:focus:ring-brand-light ${
+                className={`w-5 h-5 rounded-full transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand dark:focus:ring-brand-light flex items-center justify-center ${
                   isRetro 
                     ? 'bg-[#00ff00] shadow-[0_0_10px_rgba(0,255,0,0.7)]' 
                     : 'bg-brand dark:bg-brand-light'
                 }`}
                 aria-label={`Toggle ${isRetro ? "modern" : "retro"} mode`}
-              />
+              >
+                <History size={12} className="text-white" />
+              </button>
             </TooltipTrigger>
             <TooltipContent>
               <p>Toggle {isRetro ? "modern" : "retro"} mode</p>
@@ -87,13 +89,11 @@ const Header: React.FC<HeaderProps> = ({ initiallyHidden = false }) => {
                   <span className="absolute right-1 top-1/2 -translate-y-1/2 text-white">
                     <Moon size={12} />
                   </span>
-                  {/* Toggle dot with history icon */}
+                  {/* Toggle dot */}
                   <div 
-                    className={`absolute top-0.5 w-4 h-4 bg-white transition-all duration-300 flex items-center justify-center
+                    className={`absolute top-0.5 w-4 h-4 bg-white transition-all duration-300
                       ${isDark ? 'right-0.5' : 'left-0.5'}`}
-                  >
-                    <History size={12} className="text-brand dark:text-brand-light" />
-                  </div>
+                  />
                 </button>
               </div>
             </TooltipTrigger>
