@@ -149,7 +149,7 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
     <AnimatePresence mode="wait">
       {animationStage !== "complete" && (
         <motion.div 
-          className="fixed inset-0 flex items-center justify-center z-50 bg-[#F0EBE6] dark:bg-[#2A2D36]"
+          className="fixed inset-0 flex items-center justify-center z-50 bg-[#F0EBE6] dark:bg-[#16192E]"
           initial={{ opacity: 1 }}
           animate={{ 
             opacity: animationStage === "explode" ? 0 : 1 

@@ -5,6 +5,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import VideoDemo from "./pages/VideoDemo";
 import { RetroProvider } from "./contexts/RetroContext";
+import { GrayscaleProvider } from "./contexts/GrayscaleContext";
 
 const queryClient = new QueryClient();
 
@@ -12,15 +13,17 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <RetroProvider>
-        <BrowserRouter>
-          <div className="min-h-screen relative">
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/video-demo" element={<VideoDemo />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
-        </BrowserRouter>
+        <GrayscaleProvider>
+          <BrowserRouter>
+            <div className="min-h-screen relative">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/video-demo" element={<VideoDemo />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
+          </BrowserRouter>
+        </GrayscaleProvider>
       </RetroProvider>
     </ThemeProvider>
   </QueryClientProvider>

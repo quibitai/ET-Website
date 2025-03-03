@@ -56,7 +56,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --ring: 224.3 76.5% 48%;
   }
 }
 
@@ -248,6 +248,45 @@ textarea::placeholder {
 
   .retro-mode audio {
     display: none;
+  }
+
+  /* Grayscale mode styles */
+  .grayscale-mode:not(.retro-mode) {
+    filter: grayscale(100%);
+  }
+
+  .grayscale-mode:not(.retro-mode) * {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .grayscale-mode:not(.retro-mode) h1,
+  .grayscale-mode:not(.retro-mode) h2,
+  .grayscale-mode:not(.retro-mode) h3 {
+    @apply text-black dark:text-white;
+  }
+
+  .grayscale-mode:not(.retro-mode) .bg-\[\#F0EBE6\],
+  .grayscale-mode:not(.retro-mode) .dark\:bg-\[\#16192E\] {
+    @apply bg-gray-200 dark:bg-gray-900;
+  }
+
+  .grayscale-mode:not(.retro-mode) .bg-\[\#A1DFD4\],
+  .grayscale-mode:not(.retro-mode) .dark\:bg-\[\#3A3D45\] {
+    @apply bg-gray-300 dark:bg-gray-800;
+  }
+
+  .grayscale-mode:not(.retro-mode) .text-\[\#FF3B31\],
+  .grayscale-mode:not(.retro-mode) .dark\:text-\[\#FF7A6E\] {
+    @apply text-black dark:text-white;
+  }
+
+  .grayscale-mode:not(.retro-mode) .border-\[\#FF3B31\],
+  .grayscale-mode:not(.retro-mode) .dark\:border-\[\#FF7A6E\] {
+    @apply border-gray-700 dark:border-gray-400;
+  }
+
+  .grayscale-mode:not(.retro-mode) button:hover {
+    @apply bg-gray-700 dark:bg-gray-600;
   }
 }
 

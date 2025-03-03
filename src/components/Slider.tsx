@@ -48,20 +48,20 @@ const Slider: React.FC<SliderProps> = ({ slides }) => {
     if (currentSlide === 0) {
       return (
         <>
-          {title} <span className="font-bold bg-[#FF3B31] dark:bg-[#FF7A6E] text-white px-2 py-1 inline-block">{titleBold}</span>
+          {title} <span className="font-bold bg-brand dark:bg-brand-light text-white px-2 py-1 inline-block">{titleBold}</span>
         </>
       );
     } else if (currentSlide === 1) {
       return (
         <>
-          {title}<span className="font-bold bg-[#FF3B31] dark:bg-[#FF7A6E] text-white px-2 py-1 inline-block">{titleBold}</span>
+          {title}<span className="font-bold bg-brand dark:bg-brand-light text-white px-2 py-1 inline-block">{titleBold}</span>
         </>
       );
     } else {
       return (
         <>
           {title}<br />
-          <span className="font-bold bg-[#FF3B31] dark:bg-[#FF7A6E] text-white px-2 py-1 inline-block">{titleBold}</span>
+          <span className="font-bold bg-brand dark:bg-brand-light text-white px-2 py-1 inline-block">{titleBold}</span>
         </>
       );
     }
@@ -79,16 +79,16 @@ const Slider: React.FC<SliderProps> = ({ slides }) => {
   };
 
   return (
-    <div className="bg-[#F0EBE6] dark:bg-[#2A2D36] p-6 md:p-8 h-[500px] md:h-[600px]">
+    <div className="bg-[#F0EBE6] dark:bg-[#16192E] p-6 md:p-8 h-[500px] md:h-[600px]">
       <div className="max-w-3xl w-full mx-auto h-full flex flex-col relative pt-8 md:pt-20">
         {/* Content container */}
         <div className="flex-grow relative overflow-hidden">
           <div className="absolute inset-0">
             <div className={getTransitionClasses()}>
-              <h2 className="text-[#FF3B31] dark:text-[#FF7A6E] font-serif text-[28px] xs:text-[32px] sm:text-[38px] md:text-[54px] mb-4 md:mb-6 leading-tight text-left">
+              <h2 className="text-brand dark:text-brand-light font-serif text-[28px] xs:text-[32px] sm:text-[38px] md:text-[54px] mb-4 md:mb-6 leading-tight text-left">
                 {renderSlideTitle(slides[currentSlide].title, slides[currentSlide].titleBold)}
               </h2>
-              <p className="text-[#FF3B31] dark:text-[#FF7A6E] font-mono text-sm xs:text-base md:text-[20px] leading-relaxed mb-6 md:mb-8 text-left max-w-[90%]">
+              <p className="text-brand dark:text-brand-light font-mono text-sm xs:text-base md:text-[20px] leading-relaxed mb-6 md:mb-8 text-left max-w-[90%]">
                 {slides[currentSlide].description}
               </p>
             </div>
@@ -99,7 +99,7 @@ const Slider: React.FC<SliderProps> = ({ slides }) => {
         <div className="flex justify-center gap-4 py-4">
           <button 
             onClick={handlePrevSlide}
-            className="text-[#FF3B31] dark:text-[#FF7A6E] hover:opacity-70 transition-opacity duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF3B31] dark:focus:ring-[#FF7A6E] rounded-md p-2"
+            className="text-brand dark:text-brand-light hover:opacity-70 transition-opacity duration-300 focus:outline-none focus:ring-2 focus:ring-brand dark:focus:ring-brand-light rounded-md p-2"
             disabled={isAnimating}
             aria-label="Previous slide"
             type="button"
@@ -110,7 +110,7 @@ const Slider: React.FC<SliderProps> = ({ slides }) => {
           </button>
           <button 
             onClick={handleNextSlide}
-            className="text-[#FF3B31] dark:text-[#FF7A6E] hover:opacity-70 transition-opacity duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF3B31] dark:focus:ring-[#FF7A6E] rounded-md p-2"
+            className="text-brand dark:text-brand-light hover:opacity-70 transition-opacity duration-300 focus:outline-none focus:ring-2 focus:ring-brand dark:focus:ring-brand-light rounded-md p-2"
             disabled={isAnimating}
             aria-label="Next slide"
             type="button"

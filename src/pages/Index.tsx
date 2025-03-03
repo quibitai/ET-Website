@@ -86,7 +86,7 @@ const Index = () => {
       )}
       
       <div 
-        className={`min-h-screen transition-colors duration-300 bg-[#F0EBE6] dark:bg-[#2A2D36] transition-opacity duration-1500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        className={`min-h-screen transition-colors duration-300 bg-[#F0EBE6] dark:bg-[#16192E] transition-opacity duration-1500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
         style={{ display: showContent ? 'block' : 'none' }}
         role="main"
         aria-live="polite"
@@ -126,7 +126,7 @@ const Index = () => {
               )}
             </div>
             
-            <div className="w-0 md:w-1/3 border-r-3 border-[#FF3B31] dark:border-[#FF7A6E]"></div>
+            <div className="w-0 md:w-1/3 border-r-3 border-b-3 border-[#FF3B31] dark:border-[#FF7A6E]"></div>
             
             <div className="w-full md:w-1/3 border-r-3 border-b-3 border-[#FF3B31] dark:border-[#FF7A6E]">
               <Testimonial />
