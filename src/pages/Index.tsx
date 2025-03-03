@@ -28,12 +28,12 @@ const Index = () => {
     {
       title: "Better yet, invite everyone ",
       titleBold: "behind the veil.",
-      description: "Because creativity isn't just for the dreamers and left-handed eccentrics."
+      description: "Better yet, invite everyone behind the veil. Because creativity isn't just for the dreamers and left-handed eccentrics."
     },
     {
       title: "Whoa! You're still here?",
       titleBold: "Then you should know",
-      description: "We think stories are also about making connections, not walling off the creative process and excluding the characters from the telling of their own story. We'd be honored to hear your story and help you to tell it to the world."
+      description: "Whoa! You're still here? Then you should know, we think stories are also about making connections, not walling off the creative process and excluding the characters from the telling of their own story. We'd be honored to hear your story and help you to tell it to the world."
     }
   ];
 

@@ -43,51 +43,42 @@ const Slider: React.FC<SliderProps> = ({ slides }) => {
     }, 300);
   }, [isAnimating, slides.length]);
 
-  // Helper function to render slide title with correct line breaks
-  const renderSlideTitle = (title: string, titleBold: string) => {
-    if (currentSlide === 0) {
-      return (
-        <>
-          {title} <span className="font-bold bg-brand dark:bg-brand-light text-white px-2 py-1 inline-block">{titleBold}</span>
-        </>
-      );
-    } else if (currentSlide === 1) {
-      return (
-        <>
-          {title}<span className="font-bold bg-brand dark:bg-brand-light text-white px-2 py-1 inline-block">{titleBold}</span>
-        </>
-      );
-    } else {
-      return (
-        <>
-          {title}<br />
-          <span className="font-bold bg-brand dark:bg-brand-light text-white px-2 py-1 inline-block">{titleBold}</span>
-        </>
-      );
-    }
+  // Static title for all slides
+  const renderStaticTitle = () => {
+    return (
+      <>
+        Every brand has a story worth telling, <span className="font-bold bg-brand dark:bg-brand-light text-white px-2 py-1 inline-block">and telling well.</span>
+      </>
+    );
   };
 
-  // Get transition classes for blur effect
-  const getTransitionClasses = () => {
+  // Get transition classes for slide effect
+  const getDescriptionTransitionClasses = () => {
     const baseClasses = "transition-all duration-300 absolute w-full";
     
     if (!isAnimating) {
-      return `${baseClasses} translate-x-0 opacity-100 blur-0`;
+      return `${baseClasses} transform translate-x-0`;
     }
     
-    return `${baseClasses} translate-x-0 opacity-${isAnimating ? '50' : '100'} ${isAnimating ? 'blur-md' : 'blur-0'}`;
+    if (slideDirection === "right") {
+      return `${baseClasses} transform -translate-x-full`;
+    } else {
+      return `${baseClasses} transform translate-x-full`;
+    }
   };
 
   return (
     <div className="bg-[#F0EBE6] dark:bg-[#16192E] p-6 md:p-8 h-[500px] md:h-[600px]">
       <div className="max-w-3xl w-full mx-auto h-full flex flex-col relative pt-8 md:pt-20">
-        {/* Content container */}
+        {/* Static title */}
+        <h2 className="text-brand dark:text-brand-light font-serif text-[28px] xs:text-[32px] sm:text-[38px] md:text-[54px] mb-8 md:mb-16 leading-tight text-left">
+          {renderStaticTitle()}
+        </h2>
+        
+        {/* Dynamic description with sliding effect */}
         <div className="flex-grow relative overflow-hidden">
           <div className="absolute inset-0">
-            <div className={getTransitionClasses()}>
-              <h2 className="text-brand dark:text-brand-light font-serif text-[28px] xs:text-[32px] sm:text-[38px] md:text-[54px] mb-4 md:mb-6 leading-tight text-left">
-                {renderSlideTitle(slides[currentSlide].title, slides[currentSlide].titleBold)}
-              </h2>
+            <div className={getDescriptionTransitionClasses()}>
               <p className="text-brand dark:text-brand-light font-mono text-sm xs:text-base md:text-[20px] leading-relaxed mb-6 md:mb-8 text-left max-w-[90%]">
                 {slides[currentSlide].description}
               </p>
