@@ -46,62 +46,65 @@ const Header: React.FC<HeaderProps> = ({ initiallyHidden = false }) => {
           echotango
         </motion.h1>
       </div>
-      <div className="flex items-center gap-2.5">
-        {/* Retro mode toggle (red dot) */}
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button 
-                onClick={toggleRetro}
-                className={`w-5 h-5 rounded-full transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand dark:focus:ring-brand-light flex items-center justify-center ${
-                  isRetro 
-                    ? 'bg-[#00ff00] shadow-[0_0_10px_rgba(0,255,0,0.7)]' 
-                    : 'bg-brand dark:bg-brand-light'
-                }`}
-                aria-label={`Toggle ${isRetro ? "modern" : "retro"} mode`}
-              >
-                <History size={12} className="text-white" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Toggle {isRetro ? "modern" : "retro"} mode</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        
-        {/* Dark mode toggle */}
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="relative">
+      <div className="flex items-center">
+        {/* Morse code style toggles container */}
+        <div className="flex items-center gap-1 h-5">
+          {/* Retro mode toggle (dot) */}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
                 <button 
-                  onClick={toggleDarkMode}
-                  className={`w-10 h-5 bg-brand dark:bg-brand-light rounded-sm transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand dark:focus:ring-brand-light relative ${
-                    isRetro ? 'bg-[#00ff00] shadow-[0_0_10px_rgba(0,255,0,0.7)]' : ''
+                  onClick={toggleRetro}
+                  className={`w-5 h-5 rounded-full transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand dark:focus:ring-brand-light flex items-center justify-center ${
+                    isRetro 
+                      ? 'bg-[#00ff00] shadow-[0_0_10px_rgba(0,255,0,0.7)]' 
+                      : 'bg-brand dark:bg-brand-light'
                   }`}
-                  aria-label={`Toggle ${isDark ? "light" : "dark"} mode`}
+                  aria-label={`Toggle ${isRetro ? "modern" : "retro"} mode`}
                 >
-                  {/* Sun icon */}
-                  <span className="absolute left-1 top-1/2 -translate-y-1/2 text-white">
-                    <Sun size={12} />
-                  </span>
-                  {/* Moon icon */}
-                  <span className="absolute right-1 top-1/2 -translate-y-1/2 text-white">
-                    <Moon size={12} />
-                  </span>
-                  {/* Toggle dot */}
-                  <div 
-                    className={`absolute top-0.5 w-4 h-4 bg-white transition-all duration-300
-                      ${isDark ? 'right-0.5' : 'left-0.5'}`}
-                  />
+                  <History size={12} className="text-white" />
                 </button>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Toggle {isDark ? "light" : "dark"} mode</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Toggle {isRetro ? "modern" : "retro"} mode</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          
+          {/* Dark mode toggle (dash) */}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="relative">
+                  <button 
+                    onClick={toggleDarkMode}
+                    className={`w-10 h-5 bg-brand dark:bg-brand-light rounded-sm transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand dark:focus:ring-brand-light relative ${
+                      isRetro ? 'bg-[#00ff00] shadow-[0_0_10px_rgba(0,255,0,0.7)]' : ''
+                    }`}
+                    aria-label={`Toggle ${isDark ? "light" : "dark"} mode`}
+                  >
+                    {/* Sun icon */}
+                    <span className="absolute left-1 top-1/2 -translate-y-1/2 text-white">
+                      <Sun size={12} />
+                    </span>
+                    {/* Moon icon */}
+                    <span className="absolute right-1 top-1/2 -translate-y-1/2 text-white">
+                      <Moon size={12} />
+                    </span>
+                    {/* Toggle dot */}
+                    <div 
+                      className={`absolute top-0.5 w-4 h-4 bg-white transition-all duration-300
+                        ${isDark ? 'right-0.5' : 'left-0.5'}`}
+                    />
+                  </button>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Toggle {isDark ? "light" : "dark"} mode</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       </div>
     </header>
   );
