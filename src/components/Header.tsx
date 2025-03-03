@@ -3,7 +3,7 @@ import { useTheme } from "next-themes";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../components/ui/tooltip";
 import { motion } from "framer-motion";
 import { useRetro } from "../contexts/RetroContext";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, History } from "lucide-react";
 
 interface HeaderProps {
   initiallyHidden?: boolean;
@@ -87,11 +87,13 @@ const Header: React.FC<HeaderProps> = ({ initiallyHidden = false }) => {
                   <span className="absolute right-1 top-1/2 -translate-y-1/2 text-white">
                     <Moon size={12} />
                   </span>
-                  {/* Toggle dot */}
+                  {/* Toggle dot with history icon */}
                   <div 
-                    className={`absolute top-0.5 w-4 h-4 bg-white transition-all duration-300
+                    className={`absolute top-0.5 w-4 h-4 bg-white transition-all duration-300 flex items-center justify-center
                       ${isDark ? 'right-0.5' : 'left-0.5'}`}
-                  />
+                  >
+                    <History size={12} className="text-brand dark:text-brand-light" />
+                  </div>
                 </button>
               </div>
             </TooltipTrigger>
