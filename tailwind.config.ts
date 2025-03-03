@@ -84,10 +84,6 @@ export default {
 				pulse: {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.8' },
-				},
-				disco: {
-					'0%': { transform: 'rotate(0deg)' },
-					'100%': { transform: 'rotate(360deg)' }
 				}
 			},
 			animation: {
@@ -95,8 +91,7 @@ export default {
 				"accordion-up": "accordion-up 0.2s ease-out",
 				fadeIn: 'fadeIn 0.5s ease-out',
 				slideUp: 'slideUp 0.5s ease-out',
-				pulse: 'pulse 2s ease-in-out infinite',
-				disco: 'disco 3s linear infinite'
+				pulse: 'pulse 2s ease-in-out infinite'
 			},
 		},
 	},

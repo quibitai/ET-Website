@@ -74,32 +74,23 @@ const Header: React.FC<HeaderProps> = ({ initiallyHidden = false }) => {
               <div className="relative">
                 <button 
                   onClick={toggleDarkMode}
-                  className={`w-14 h-7 bg-brand dark:bg-brand-light rounded-full transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand dark:focus:ring-brand-light relative ${
+                  className={`w-10 h-5 bg-brand dark:bg-brand-light rounded-sm transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand dark:focus:ring-brand-light relative ${
                     isRetro ? 'bg-[#00ff00] shadow-[0_0_10px_rgba(0,255,0,0.7)]' : ''
                   }`}
                   aria-label={`Toggle ${isDark ? "light" : "dark"} mode`}
                 >
                   {/* Sun icon */}
-                  <span className="absolute left-2 top-1/2 -translate-y-1/2 text-white">
-                    <Sun size={14} />
+                  <span className="absolute left-1 top-1/2 -translate-y-1/2 text-white">
+                    <Sun size={12} />
                   </span>
                   {/* Moon icon */}
-                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white">
-                    <Moon size={14} />
+                  <span className="absolute right-1 top-1/2 -translate-y-1/2 text-white">
+                    <Moon size={12} />
                   </span>
-                  {/* Disco ball dot */}
-                  <motion.div 
-                    className={`absolute top-1 w-5 h-5 rounded-full bg-white transition-colors
-                      ${isDark ? 'right-1' : 'left-1'}
-                      before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-br before:from-transparent before:to-gray-200 before:rounded-full before:opacity-50
-                      after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_25%,rgba(255,255,255,0.2)_50%,transparent_50%,transparent_75%,rgba(255,255,255,0.2)_75%,rgba(255,255,255,0.2))] after:bg-[length:4px_4px] after:rounded-full after:animate-disco`}
-                    animate={{
-                      rotate: isDark ? [0, 360] : [360, 0],
-                    }}
-                    transition={{
-                      duration: 0.3,
-                      ease: "easeInOut"
-                    }}
+                  {/* Toggle dot */}
+                  <div 
+                    className={`absolute top-0.5 w-4 h-4 bg-white transition-all duration-300
+                      ${isDark ? 'right-0.5' : 'left-0.5'}`}
                   />
                 </button>
               </div>
