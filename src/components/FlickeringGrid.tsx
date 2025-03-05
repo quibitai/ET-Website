@@ -63,10 +63,10 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
       
       // Calculate the number of columns and rows to fill the entire canvas
       // Add extra squares to ensure we cover the entire area including edges
-      const totalWidth = width + squareSize + gridGap;
-      const totalHeight = height + squareSize + gridGap;
-      const cols = Math.ceil(totalWidth / (squareSize + gridGap)) + 1;
-      const rows = Math.ceil(totalHeight / (squareSize + gridGap)) + 1;
+      const totalWidth = width + (squareSize + gridGap) * 2;  // Add more padding
+      const totalHeight = height + (squareSize + gridGap) * 2;  // Add more padding
+      const cols = Math.ceil(totalWidth / (squareSize + gridGap)) + 2;  // Add extra columns
+      const rows = Math.ceil(totalHeight / (squareSize + gridGap)) + 2;  // Add extra rows
 
       const squares = new Float32Array(cols * rows);
       for (let i = 0; i < squares.length; i++) {
@@ -103,9 +103,9 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
       ctx.fillStyle = "transparent";
       ctx.fillRect(0, 0, width, height);
 
-      // Start slightly offset to cover edges
-      const startOffsetX = -(gridGap / 2);
-      const startOffsetY = -(gridGap / 2);
+      // Start with a larger negative offset to ensure full coverage
+      const startOffsetX = -(squareSize + gridGap);
+      const startOffsetY = -(squareSize + gridGap);
 
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {

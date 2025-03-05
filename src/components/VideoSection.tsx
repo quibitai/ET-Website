@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from "react";
 import { Clapperboard, X } from "lucide-react";
-import IndustryTerm from "./IndustryTerm";
-import { getRandomTerm } from "../data/industryTerms";
+import { useIndustry } from "../contexts/IndustryContext";
 import HeroVideoDialog from "./HeroVideoDialog";
 import { Dialog, DialogContent } from "./ui/dialog";
 
@@ -27,145 +26,128 @@ const VideoSection: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [randomTerm, setRandomTerm] = useState(getRandomTerm());
-  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const { getRandomTerm } = useIndustry();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  
-  // Function to advance to the next image
-  const advanceImage = useCallback(() => {
-    setCurrentImageIndex(prevIndex => (prevIndex + 1) % images.length);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if device is mobile on mount
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
-  
+
   // Preload images on mount
   useEffect(() => {
-    const loadImages = async () => {
-      await Promise.all(images.map(src => {
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.onload = () => resolve(true);
-          img.onerror = () => resolve(false);
-          img.src = src;
-        });
-      }));
-      setImagesLoaded(true);
-    };
-    
-    loadImages();
+    preloadImages();
   }, []);
-  
-  // Set up and tear down the animation interval
+
+  // Set up the image cycling interval
   useEffect(() => {
-    // Only start animation when images are loaded
-    if (!imagesLoaded) return;
-    
-    // Clear any existing interval
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-    
-    // Set up a new interval if animation should be playing
-    if (isPlaying) {
-      // Slowed down significantly for a more deliberate animation
-      intervalRef.current = setInterval(advanceImage, 1500);
+    if (isPlaying && !isDialogOpen) {
+      intervalRef.current = setInterval(() => {
+        setCurrentImageIndex(prevIndex => (prevIndex + 1) % images.length);
+      }, 500); // Change image every 500ms
     }
 
-    // Clean up on unmount or when dependencies change
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
     };
-  }, [isPlaying, imagesLoaded, advanceImage]);
+  }, [isPlaying, isDialogOpen]);
 
-  // Get a random term on component mount
-  useEffect(() => {
-    setRandomTerm(getRandomTerm());
-  }, []);
-
-  // Handle dialog state change
-  const handleDialogOpenChange = (open: boolean) => {
-    setIsDialogOpen(open);
-    setIsPlaying(!open); // Pause animation when dialog is open
+  // Toggle play/pause
+  const togglePlayPause = () => {
+    setIsPlaying(prev => !prev);
   };
 
-  // Vimeo video URL
-  const vimeoSrc = "https://player.vimeo.com/video/1058267807";
+  // Open the dialog
+  const openDialog = () => {
+    setIsDialogOpen(true);
+    setIsPlaying(false); // Pause the animation when dialog opens
+  };
 
+  // Close the dialog
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+    setIsPlaying(true); // Resume the animation when dialog closes
+    getRandomTerm(); // Just get a new term but don't need to store it
+  };
+
+  // Memoize the VideoSection component
   return (
-    <div className="relative w-full md:w-1/3 border-b-3 border-[#FF3B31] dark:border-[#FF7A6E]">
-      <div className="h-full">
-        <div className="grid grid-rows-2 h-full">
-          <div className="relative border-b-3 border-r-3 border-[#FF3B31] dark:border-[#FF7A6E] h-full overflow-hidden">
-            <div className="w-full h-full">
-              <img 
-                key={currentImageIndex}
-                src={images[currentImageIndex]}
-                alt={`Animated sequence frame ${currentImageIndex + 1} of ${images.length}`}
-                className="w-full h-full object-cover transition-opacity duration-100 ease-in-out"
-                loading="eager" // Ensure first image loads immediately
-                decoding="async" // Allow browser to optimize decoding
-              />
-              
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 z-10 w-full h-full cursor-pointer">
-                <div className="flex flex-col items-center justify-center">
-                  <Clapperboard 
-                    className="text-[#FFEB94] w-16 h-16" 
-                    aria-hidden="true" 
-                    onClick={() => handleDialogOpenChange(true)}
-                  />
-                  <p 
-                    className="text-[#FFEB94] mt-2 text-xl font-medium"
-                    onClick={() => handleDialogOpenChange(true)}
-                  >
-                    play 2025 reel
-                  </p>
-                </div>
-              </div>
-              
-              {/* Video Dialog */}
-              <Dialog 
-                open={isDialogOpen} 
-                onOpenChange={handleDialogOpenChange}
-              >
-                <DialogContent 
-                  className="sm:max-w-4xl p-0 bg-black border-none overflow-hidden"
-                  aria-labelledby="video-dialog-title"
-                >
-                  <button 
-                    onClick={() => handleDialogOpenChange(false)}
-                    className="absolute right-4 top-4 z-10 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 focus:outline-none focus:ring-2 focus:ring-[#FF3B31] dark:focus:ring-[#FF7A6E]"
-                    aria-label="Close video"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                  
-                  <div className="relative w-full" style={{ padding: '56.25% 0 0 0' }}>
-                    {isDialogOpen && (
-                      <iframe 
-                        src={`${vimeoSrc}?autoplay=1&loop=0&muted=0`}
-                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} 
-                        frameBorder="0" 
-                        allow="autoplay; fullscreen; picture-in-picture" 
-                        allowFullScreen
-                        title="2025 Demo Reel"
-                        id="video-dialog-title"
-                      ></iframe>
-                    )}
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
+    <div className="w-full h-full bg-black overflow-hidden">
+      {/* Image display with cycling effect */}
+      <div 
+        className="relative w-full h-full cursor-pointer group"
+        onClick={openDialog}
+      >
+        {images.map((src, index) => (
+          <img
+            key={src}
+            src={src}
+            alt={`Production process ${index + 1}`}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        ))}
+        
+        {/* Play/pause button */}
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            togglePlayPause();
+          }}
+          className="absolute bottom-2 left-2 bg-black/70 hover:bg-black text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+          aria-label={isPlaying ? "Pause animation" : "Play animation"}
+        >
+          {isPlaying ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="6" y="4" width="4" height="16"></rect>
+              <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          )}
+        </button>
+        
+        {/* Play video overlay */}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
+          <div className="bg-white dark:bg-gray-900 rounded-full p-2 transform transition-transform group-hover:scale-110">
+            <Clapperboard size={24} className="text-[#FF3B31] dark:text-[#FFEB94]" />
           </div>
-          
-          <div className="bg-[#FFEB94]/70 dark:bg-[#3A3D45] flex items-center justify-center p-4 border-r-3 border-[#FF3B31] dark:border-[#FF7A6E]">
-            <div className="w-full max-w-xs">
-              <IndustryTerm term={randomTerm} />
-            </div>
-          </div>
+          <span className="absolute bottom-2 right-2 text-white text-xs font-medium bg-black/70 px-2 py-1 rounded">
+            Watch Demo
+          </span>
         </div>
       </div>
+      
+      {/* Video Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-4xl p-0 border-0 overflow-hidden bg-transparent" onInteractOutside={closeDialog}>
+          <button 
+            onClick={closeDialog}
+            className="absolute right-2 top-2 z-50 bg-black/70 text-white p-1 rounded-full hover:bg-black/90 transition-colors"
+            aria-label="Close dialog"
+          >
+            <X size={20} />
+          </button>
+          <HeroVideoDialog 
+            videoSrc="https://player.vimeo.com/video/715386363"
+            thumbnailSrc={images[0]}
+            thumbnailAlt="Echo Tango Demo Reel" 
+            animationStyle="from-center"
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -1,57 +1,31 @@
 import React from "react";
 import { FlickeringGrid } from "./FlickeringGrid";
-import { useTheme } from "next-themes";
-import { useGrayscale } from "../contexts/GrayscaleContext";
+import { useTheme, getBackgroundColor, getGridColor, getGridOpacity } from "../theme";
 
+/**
+ * EmptyBox component
+ * 
+ * Displays a flickering grid with "WORK" text overlay.
+ * Uses the unified theme system to maintain consistent appearances
+ * across standard, grayscale, and retro modes.
+ */
 const EmptyBox: React.FC = () => {
-  const { resolvedTheme } = useTheme();
-  const { isGrayscale } = useGrayscale();
-  const isDark = resolvedTheme === "dark";
-  const isRetroMode = document.documentElement.classList.contains('retro-mode');
+  const { resolvedColorMode, visualMode, isDark, isRetro } = useTheme();
   
-  // Get the background color based on current theme to match text with it
-  const getBackgroundColor = () => {
-    // If retro mode, use contrasting color
-    if (isRetroMode) {
-      return "#FFEB94"; // Yellow for retro mode
-    }
-    
-    // If grayscale mode
-    if (isGrayscale) {
-      return isDark ? "#111827" : "#e5e7eb"; // bg-gray-900 : bg-gray-200
-    }
-    
-    // Regular light/dark mode
-    return isDark ? "#16192E" : "#F0EBE6"; // Dark blue : Cream
-  };
+  // Get the appropriate background color for the current theme
+  const bgColor = getBackgroundColor(isDark, visualMode);
   
-  // Determine colors based on theme and grayscale mode
-  const getGridColor = () => {
-    if (isRetroMode) {
-      return "rgb(255, 235, 148)"; // Yellow for retro mode
-    }
-    
-    if (isDark) {
-      // Brighter color for dark mode to make the grid more visible
-      return "rgb(230, 230, 230)"; // Brighter white/light gray for dark mode
-    } else {
-      return "rgb(255, 59, 49)"; // Red for light mode
-    }
-  };
-
+  // Get the grid color based on current theme
+  const gridColor = getGridColor(isDark, visualMode);
+  
   // Get appropriate opacity based on theme
-  const getGridOpacity = () => {
-    if (isDark && !isRetroMode) {
-      return 0.5; // Higher opacity in dark mode for better visibility
-    }
-    return 0.3; // Standard opacity for other modes
-  };
+  const gridOpacity = getGridOpacity(isDark, visualMode);
 
   return (
     <div className="relative h-full w-full overflow-hidden">
       <FlickeringGrid 
-        color={getGridColor()}
-        maxOpacity={getGridOpacity()}
+        color={gridColor}
+        maxOpacity={gridOpacity}
         squareSize={2}
         gridGap={1}
         flickerChance={0.07}
@@ -61,7 +35,7 @@ const EmptyBox: React.FC = () => {
         <div 
           className="text-7xl md:text-8xl font-black tracking-wider transform transition-transform duration-300 hover:scale-105 select-none" 
           style={{ 
-            color: getBackgroundColor(),
+            color: bgColor,
             textShadow: '3px 3px 0px rgba(0,0,0,0.1)' 
           }}
         >

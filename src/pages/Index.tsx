@@ -8,6 +8,8 @@ import IntroAnimation from "../components/IntroAnimation";
 import RetroPlayer from "../components/RetroPlayer";
 import { useRetro } from '../contexts/RetroContext';
 import EmptyBox from "../components/EmptyBox";
+import IndustryTerm from "../components/IndustryTerm";
+import { useIndustry } from "../contexts/IndustryContext";
 
 // Lazy load the VideoSection component as it's heavier with images
 const VideoSection = lazy(() => import("../components/VideoSection"));
@@ -19,12 +21,15 @@ const Index = () => {
   const [animationComplete, setAnimationComplete] = useState(false);
   const [animationRemoved, setAnimationRemoved] = useState(false);
   const { isRetro } = useRetro();
+  const { currentTerm, getRandomTerm } = useIndustry();
+  const [randomTerm, setRandomTerm] = useState(currentTerm);
 
   const slides = [
     {
       title: "Every brand has a story worth telling,",
       titleBold: "and telling well.",
-      description: "We bring together the brand designers and visual storytellers, the artists and the filmmakers, the illustrators, animators, writers, the editors...throw them into the creative sandbox, and make some magic happen."
+      description: "We bring together the brand designers and visual storytellers, the artists and the filmmakers, the illustrators, animators, writers, the editors...throw them into the creative sandbox, and make some magic happen.",
+      titleBoldColor: "#F0EBE6" // Match the background color for "and telling well."
     },
     {
       title: "Better yet, invite everyone ",
@@ -80,6 +85,14 @@ const Index = () => {
     }
   }, []);
 
+  // Get a new term when the component mounts
+  useEffect(() => {
+    setRandomTerm(getRandomTerm());
+  }, []);
+
+  // Get background color based on dark/light mode
+  const bgColor = "bg-[#F0EBE6] dark:bg-[#16192E]";
+
   return (
     <>
       {showIntro && !animationRemoved && (
@@ -87,7 +100,7 @@ const Index = () => {
       )}
       
       <div 
-        className={`min-h-screen transition-colors duration-300 bg-[#F0EBE6] dark:bg-[#16192E] transition-opacity duration-1500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        className={`min-h-screen transition-colors duration-300 ${bgColor} transition-opacity duration-1500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
         style={{ display: showContent ? 'block' : 'none' }}
         role="main"
         aria-live="polite"
@@ -96,43 +109,61 @@ const Index = () => {
           <Header initiallyHidden={!animationComplete} />
           {isRetro && <RetroPlayer />}
 
-          <div className="flex flex-col md:flex-row border-l-3 border-t-3 border-[#FF3B31] dark:border-[#FF7A6E]">
-            <div className="w-full md:w-2/3 border-r-3 border-b-3 border-[#FF3B31] dark:border-[#FF7A6E]">
-              <Slider slides={slides} />
-            </div>
-
-            <Suspense fallback={
-              <div className="w-full md:w-1/3 border-b-3 border-[#FF3B31] dark:border-[#FF7A6E] h-full flex items-center justify-center">
-                <div className="animate-pulse bg-[#FF3B31]/20 dark:bg-[#FF7A6E]/20 h-full w-full"></div>
+          {/* 3x3 Grid with consistent border treatment */}
+          <div className="relative border-3 border-solid border-[#FF3B31] dark:border-[#FF3B31] dark:border-[#FF7A6E]">
+            <div className="grid grid-cols-3">
+              {/* Top row */}
+              <div className="col-span-2 row-span-2 border-r-3 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] min-h-[600px]">
+                <Slider slides={slides} />
               </div>
-            }>
-              <VideoSection />
-            </Suspense>
-          </div>
-
-          <div className="flex flex-col md:flex-row border-l-3 border-[#FF3B31] dark:border-[#FF7A6E] mt-0">
-            <div className="w-full md:w-1/3 border-r-3 border-b-3 border-[#FF3B31] dark:border-[#FF7A6E] relative">
-              <ContactForm />
-              {isRetro && (
-                <div className="visitor-counter">
-                  <img 
-                    src="data:image/gif;base64,R0lGODlhEAAQALMAAAAAAP///+7u7t3d3bu7u6qqqpmZmYiIiHd3d2ZmZlVVVURERDMzMyIiIhEREQAAACH+AS4ALAAAAAAQABAAAARFEMj3gL0P4pzUMIqrcB0XBuIYjgNWnIWVJMqVkgGYQEHQhLwwfBaYBYP5gUAQ1GWBXhZIyfgVQTEpKFSi2CwWg+VqtQgAOw==" 
-                    alt="Under Construction"
-                    className="construction"
-                  />
-                  <div>
-                    Visitors: {localStorage.getItem('visitor-count')?.padStart(6, '0') || '000000'}
+              
+              <div className="border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+                <Suspense fallback={
+                  <div className="h-full w-full flex items-center justify-center">
+                    <div className="animate-pulse bg-[#FF3B31]/20 dark:bg-[#FF7A6E]/20 h-full w-full"></div>
+                  </div>
+                }>
+                  <div className="h-full w-full">
+                    <VideoSection />
+                  </div>
+                </Suspense>
+              </div>
+              
+              {/* Middle row - right cell */}
+              <div className="border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+                <div className="h-full">
+                  <div className={`${bgColor} p-8 h-full flex items-center`}>
+                    <IndustryTerm term={randomTerm} />
                   </div>
                 </div>
-              )}
-            </div>
-            
-            <div className="w-full h-32 md:h-auto md:w-1/3 border-r-3 border-b-3 border-[#FF3B31] dark:border-[#FF7A6E]">
-              <EmptyBox />
-            </div>
-            
-            <div className="w-full md:w-1/3 border-r-3 border-b-3 border-[#FF3B31] dark:border-[#FF7A6E]">
-              <Testimonial />
+              </div>
+              
+              {/* Bottom row */}
+              <div className="border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+                <ContactForm />
+                {isRetro && (
+                  <div className="visitor-counter">
+                    <img 
+                      src="data:image/gif;base64,R0lGODlhEAAQALMAAAAAAP///+7u7t3d3bu7u6qqqpmZmYiIiHd3d2ZmZlVVVURERDMzMyIiIhEREQAAACH+AS4ALAAAAAAQABAAAARFEMj3gL0P4pzUMIqrcB0XBuIYjgNWnIWVJMqVkgGYQEHQhLwwfBaYBYP5gUAQ1GWBXhZIyfgVQTEpKFSi2CwWg+VqtQgAOw==" 
+                      alt="Under Construction"
+                      className="construction"
+                    />
+                    <div>
+                      Visitors: {localStorage.getItem('visitor-count')?.padStart(6, '0') || '000000'}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+                <EmptyBox />
+              </div>
+              
+              <div className="h-[300px]">
+                <div className="h-full">
+                  <Testimonial />
+                </div>
+              </div>
             </div>
           </div>
           

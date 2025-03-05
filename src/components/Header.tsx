@@ -1,23 +1,30 @@
 import React, { useEffect, useState, useCallback, memo } from "react";
-import { useTheme } from "next-themes";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../components/ui/tooltip";
 import { motion } from "framer-motion";
-import { useRetro } from "../contexts/RetroContext";
-import { useGrayscale } from "../contexts/GrayscaleContext";
 import { Sun, Moon, History, EyeOff } from "lucide-react";
+import { useTheme } from "../theme";
 
 interface HeaderProps {
   initiallyHidden?: boolean;
 }
 
+/**
+ * Header Component
+ * 
+ * Site header with logo and theme toggle buttons.
+ * Uses the unified theme system for consistent theme management.
+ */
 const Header: React.FC<HeaderProps> = ({ initiallyHidden = false }) => {
-  const { theme, setTheme, resolvedTheme } = useTheme();
-  const { isRetro, toggleRetro } = useRetro();
-  const { isGrayscale, toggleGrayscale } = useGrayscale();
-  const [logoVisible, setLogoVisible] = useState(!initiallyHidden);
+  const { 
+    isDark, 
+    isRetro, 
+    isGrayscale, 
+    toggleColorMode, 
+    toggleRetro, 
+    toggleGrayscale 
+  } = useTheme();
   
-  // Use resolvedTheme which gives the actual current theme (accounting for system preference)
-  const isDark = resolvedTheme === "dark";
+  const [logoVisible, setLogoVisible] = useState(!initiallyHidden);
   
   useEffect(() => {
     // If initially hidden, show the logo after a delay
@@ -31,10 +38,6 @@ const Header: React.FC<HeaderProps> = ({ initiallyHidden = false }) => {
       setLogoVisible(true);
     }
   }, [initiallyHidden]);
-
-  const toggleDarkMode = useCallback(() => {
-    setTheme(isDark ? "light" : "dark");
-  }, [isDark, setTheme]);
 
   return (
     <header className="flex justify-between items-center mb-4" role="banner">
@@ -100,7 +103,7 @@ const Header: React.FC<HeaderProps> = ({ initiallyHidden = false }) => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <button 
-                  onClick={toggleDarkMode}
+                  onClick={toggleColorMode}
                   className={`w-16 h-7 rounded-full transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand dark:focus:ring-brand-light relative flex items-center ${
                     isRetro ? 'bg-[#00ff00] shadow-[0_0_10px_rgba(0,255,0,0.7)]' : 'bg-brand dark:bg-brand-light'
                   }`}

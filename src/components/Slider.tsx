@@ -4,6 +4,7 @@ type SlideContent = {
   title: string;
   titleBold: string;
   description: string;
+  titleBoldColor?: string; // Optional color for the bold title
 };
 
 interface SliderProps {
@@ -43,11 +44,19 @@ const Slider: React.FC<SliderProps> = ({ slides }) => {
     }, 300);
   }, [isAnimating, slides.length]);
 
-  // Static title for all slides
-  const renderStaticTitle = () => {
+  // Renders the title with optional color for the bold part
+  const renderTitle = () => {
+    const currentSlide = slides[0]; // Always use the first slide for the title
+    const titleBoldColor = currentSlide.titleBoldColor || undefined;
+    
     return (
       <>
-        Every brand has a story worth telling, <span className="font-bold bg-brand dark:bg-brand-light text-white px-2 py-1 inline-block">and telling well.</span>
+        {currentSlide.title} <span 
+          className="font-bold bg-brand dark:bg-brand-light text-white px-2 py-1 inline-block"
+          style={titleBoldColor ? { color: titleBoldColor } : {}}
+        >
+          {currentSlide.titleBold}
+        </span>
       </>
     );
   };
@@ -70,9 +79,9 @@ const Slider: React.FC<SliderProps> = ({ slides }) => {
   return (
     <div className="bg-[#F0EBE6] dark:bg-[#16192E] p-6 md:p-8 h-[500px] md:h-[600px]">
       <div className="max-w-3xl w-full mx-auto h-full flex flex-col relative pt-8 md:pt-20">
-        {/* Static title */}
+        {/* Title with bold part */}
         <h2 className="text-brand dark:text-brand-light font-serif text-[28px] xs:text-[32px] sm:text-[38px] md:text-[54px] mb-8 md:mb-16 leading-tight text-left">
-          {renderStaticTitle()}
+          {renderTitle()}
         </h2>
         
         {/* Dynamic description with sliding effect */}
