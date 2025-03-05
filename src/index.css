@@ -90,8 +90,74 @@ textarea::placeholder {
   color: rgba(255, 120, 110, 0.5);
 }
 
-.dark .border-[#FF3B31] {
-  @apply border-[#FF7A6E];
+/* Override border colors in dark mode to be white instead of red */
+.dark .border-\[\#FF3B31\] {
+  border-color: white !important;
+}
+
+.dark .dark\:border-\[\#FF7A6E\] {
+  border-color: white !important;
+}
+
+/* Apply to specific border directions as well */
+.dark .border-t-\[\#FF3B31\],
+.dark .border-b-\[\#FF3B31\],
+.dark .border-l-\[\#FF3B31\],
+.dark .border-r-\[\#FF3B31\] {
+  border-color: white !important;
+}
+
+.dark .dark\:border-t-\[\#FF7A6E\],
+.dark .dark\:border-b-\[\#FF7A6E\],
+.dark .dark\:border-l-\[\#FF7A6E\],
+.dark .dark\:border-r-\[\#FF7A6E\] {
+  border-color: white !important;
+}
+
+/* Direct overrides for specific border elements */
+.dark [class*="border"][class*="#FF3B31"],
+.dark [class*="border"][class*="#FF7A6E"] {
+  border-color: white !important;
+}
+
+/* Ensure light mode borders stay red */
+html:not(.dark):not(.grayscale-mode) .border-\[\#FF3B31\] {
+  border-color: #FF3B31 !important;
+}
+
+html:not(.dark):not(.grayscale-mode) .border-\[\#FF7A6E\] {
+  border-color: #FF7A6E !important;
+}
+
+html:not(.dark):not(.grayscale-mode) .border-t-\[\#FF3B31\], 
+html:not(.dark):not(.grayscale-mode) .border-b-\[\#FF3B31\], 
+html:not(.dark):not(.grayscale-mode) .border-l-\[\#FF3B31\], 
+html:not(.dark):not(.grayscale-mode) .border-r-\[\#FF3B31\] {
+  border-color: #FF3B31 !important;
+}
+
+html:not(.dark):not(.grayscale-mode) .border-t-\[\#FF7A6E\], 
+html:not(.dark):not(.grayscale-mode) .border-b-\[\#FF7A6E\], 
+html:not(.dark):not(.grayscale-mode) .border-l-\[\#FF7A6E\], 
+html:not(.dark):not(.grayscale-mode) .border-r-\[\#FF7A6E\] {
+  border-color: #FF7A6E !important;
+}
+
+/* Force grayscale borders to black in light mode */
+html.grayscale-mode:not(.dark):not(.retro-mode) .border-\[\#FF3B31\],
+html.grayscale-mode:not(.dark):not(.retro-mode) .border-\[\#FF7A6E\] {
+  border-color: black !important;
+}
+
+html.grayscale-mode:not(.dark):not(.retro-mode) .border-t-\[\#FF3B31\],
+html.grayscale-mode:not(.dark):not(.retro-mode) .border-b-\[\#FF3B31\],
+html.grayscale-mode:not(.dark):not(.retro-mode) .border-l-\[\#FF3B31\],
+html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF3B31\],
+html.grayscale-mode:not(.dark):not(.retro-mode) .border-t-\[\#FF7A6E\],
+html.grayscale-mode:not(.dark):not(.retro-mode) .border-b-\[\#FF7A6E\],
+html.grayscale-mode:not(.dark):not(.retro-mode) .border-l-\[\#FF7A6E\],
+html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
+  border-color: black !important;
 }
 
 /* Custom animations */
@@ -282,7 +348,31 @@ textarea::placeholder {
 
   .grayscale-mode:not(.retro-mode) .border-\[\#FF3B31\],
   .grayscale-mode:not(.retro-mode) .dark\:border-\[\#FF7A6E\] {
-    @apply border-gray-700 dark:border-gray-400;
+    @apply border-black dark:border-white;
+  }
+
+  /* Make sure light mode & grayscale borders are properly handled */
+  .grayscale-mode:not(.retro-mode):not(.dark) [class*="border-[#FF"] {
+    border-color: black !important;
+  }
+
+  .grayscale-mode:not(.retro-mode).dark [class*="border-[#FF"] {
+    border-color: white !important;
+  }
+
+  /* Border direction specific rules for grayscale */
+  .grayscale-mode:not(.retro-mode):not(.dark) [class*="border-t-[#FF"],
+  .grayscale-mode:not(.retro-mode):not(.dark) [class*="border-r-[#FF"],
+  .grayscale-mode:not(.retro-mode):not(.dark) [class*="border-b-[#FF"],
+  .grayscale-mode:not(.retro-mode):not(.dark) [class*="border-l-[#FF"] {
+    border-color: black !important;
+  }
+
+  .grayscale-mode:not(.retro-mode).dark [class*="border-t-[#FF"],
+  .grayscale-mode:not(.retro-mode).dark [class*="border-r-[#FF"],
+  .grayscale-mode:not(.retro-mode).dark [class*="border-b-[#FF"],
+  .grayscale-mode:not(.retro-mode).dark [class*="border-l-[#FF"] {
+    border-color: white !important;
   }
 
   .grayscale-mode:not(.retro-mode) button:hover {
@@ -316,97 +406,4 @@ textarea::placeholder {
 
 .dark .scrollbar-thin::-webkit-scrollbar-thumb {
   background-color: rgba(255, 235, 148, 0.5);
-}
-
-/* VHS/CRT Effects */
-@keyframes vhsTracking {
-  0% { transform: translateY(0); opacity: 1; }
-  5% { transform: translateY(-1px); opacity: 0.9; }
-  10% { transform: translateY(1px); opacity: 0.95; }
-  15% { transform: translateY(-1px); opacity: 0.9; }
-  20% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-
-.vhs-tracking {
-  animation: vhsTracking 8s infinite;
-  animation-timing-function: steps(10);
-}
-
-.crt-screen {
-  position: relative;
-  overflow: hidden;
-}
-
-.crt-screen::before {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-  background-size: 100% 4px, 6px 100%;
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0.15;
-}
-
-.crt-screen::after {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: rgba(18, 16, 16, 0.1);
-  opacity: 0;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.vhs-flicker::after {
-  animation: flicker 0.3s infinite;
-}
-
-@keyframes flicker {
-  0% { opacity: 0.1; }
-  50% { opacity: 0.1; }
-  52% { opacity: 0.3; }
-  54% { opacity: 0.1; }
-  100% { opacity: 0; }
-}
-
-/* VHS Color Bleeding */
-.vhs-text {
-  position: relative;
-  color: white;
-}
-
-.vhs-text::before,
-.vhs-text::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-
-.vhs-text::before {
-  color: rgba(255, 0, 0, 0.5);
-  transform: translateX(-1px);
-}
-
-.vhs-text::after {
-  color: rgba(0, 0, 255, 0.5);
-  transform: translateX(1px);
-}
-
-/* Dark mode border color override */
-.dark .border-[#FF3B31] {
-  @apply border-[#FF7A6E];
 }

@@ -66,8 +66,8 @@ const VideoSection: React.FC = () => {
     
     // Set up a new interval if animation should be playing
     if (isPlaying) {
-      // Slowed down to 800ms for better performance
-      intervalRef.current = setInterval(advanceImage, 800);
+      // Slowed down significantly for a more deliberate animation
+      intervalRef.current = setInterval(advanceImage, 1500);
     }
 
     // Clean up on unmount or when dependencies change
@@ -159,7 +159,7 @@ const VideoSection: React.FC = () => {
             </div>
           </div>
           
-          <div className="bg-[#FFEB94] dark:bg-[#3A3D45] flex items-center justify-center p-4 border-r-3 border-[#FF3B31] dark:border-[#FF7A6E]">
+          <div className="bg-[#FFEB94]/70 dark:bg-[#3A3D45] flex items-center justify-center p-4 border-r-3 border-[#FF3B31] dark:border-[#FF7A6E]">
             <div className="w-full max-w-xs">
               <IndustryTerm term={randomTerm} />
             </div>

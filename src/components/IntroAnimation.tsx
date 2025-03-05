@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import CRTEffect from "./CRTEffect";
 
 interface IntroAnimationProps {
   onAnimationComplete: () => void;
@@ -146,100 +145,83 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
     };
   };
 
-  // Determine CRT effect intensity based on animation stage
-  const getCRTIntensity = () => {
-    if (animationStage === "initial" || animationStage === "zoom") {
-      return "low";
-    } else if (animationStage === "shake") {
-      return "medium";
-    } else if (animationStage === "explode") {
-      return "high";
-    }
-    return "medium";
-  };
-
   return (
     <AnimatePresence mode="wait">
       {animationStage !== "complete" && (
-        <CRTEffect 
-          intensity={getCRTIntensity() as 'low' | 'medium' | 'high'} 
-          active={animationStage !== "initial"}
+        <motion.div 
+          className="fixed inset-0 flex items-center justify-center z-50 bg-[#F0EBE6] dark:bg-[#16192E]"
+          initial={{ opacity: 1 }}
+          animate={{ 
+            opacity: animationStage === "explode" ? 0 : 1 
+          }}
+          exit={{ opacity: 0 }}
+          transition={{ 
+            duration: animationStage === "explode" ? 2.0 : 0.5,
+            ease: "easeInOut",
+            opacity: { delay: 1.2 }
+          }}
+          aria-live="polite"
+          aria-atomic="true"
+          role="status"
         >
-          <motion.div 
-            className="fixed inset-0 flex items-center justify-center z-50 bg-[#F0EBE6] dark:bg-[#16192E]"
-            initial={{ opacity: 1 }}
-            animate={{ 
-              opacity: animationStage === "explode" ? 0 : 1 
-            }}
-            exit={{ opacity: 0 }}
-            transition={{ 
-              duration: animationStage === "explode" ? 2.0 : 0.5,
-              ease: "easeInOut",
-              opacity: { delay: 1.2 }
-            }}
-            aria-live="polite"
-            aria-atomic="true"
-            role="status"
-          >
-            {animationStage !== "explode" ? (
-              <motion.div
-                ref={containerRef}
-                className="relative"
-                initial={{ scale: 1 }}
-                animate={getContainerAnimation()}
-                transition={getContainerTransition()}
+          {animationStage !== "explode" ? (
+            <motion.div
+              ref={containerRef}
+              className="relative"
+              initial={{ scale: 1 }}
+              animate={getContainerAnimation()}
+              transition={getContainerTransition()}
+            >
+              <motion.h1 
+                className="text-[#FF3B31] dark:text-[#FF7A6E] font-bold tracking-tighter"
+                initial={{ fontSize: "2rem", opacity: 0 }}
+                animate={getTextAnimation()}
+                transition={getTextTransition()}
+                aria-label="Echo Tango logo animation"
               >
-                <motion.h1 
-                  className="text-[#FF3B31] dark:text-[#FF7A6E] font-bold tracking-tighter"
-                  initial={{ fontSize: "2rem", opacity: 0 }}
-                  animate={getTextAnimation()}
-                  transition={getTextTransition()}
-                  aria-label="Echo Tango logo animation"
+                echotango
+              </motion.h1>
+            </motion.div>
+          ) : (
+            <div className="relative" aria-label="Echo Tango logo exploding animation">
+              {letters.map((letter, index) => (
+                <motion.span
+                  key={index}
+                  className="absolute text-[#FF3B31] dark:text-[#FF7A6E] font-bold text-6xl tracking-tighter"
+                  style={{ 
+                    originX: 0.5,
+                    originY: 0.5,
+                    display: 'inline-block',
+                    left: `${index * 40}px`,
+                    top: 0
+                  }}
+                  initial={{ 
+                    opacity: 1,
+                    x: 0,
+                    y: 0,
+                    rotate: 0,
+                    scale: 2.8
+                  }}
+                  animate={{ 
+                    opacity: 0,
+                    x: letterDirectionsRef.current[index].x,
+                    y: letterDirectionsRef.current[index].y,
+                    rotate: letterDirectionsRef.current[index].rotate,
+                    scale: letterDirectionsRef.current[index].scale
+                  }}
+                  transition={{ 
+                    duration: 2.5, // Increased for smoother animation
+                    ease: [0.16, 1, 0.3, 1], // Improved easing for smoother explosion
+                    delay: index * 0.02 // Slightly reduced for more simultaneous explosion
+                  }}
+                  aria-hidden="true" // Hide from screen readers as it's decorative
                 >
-                  echotango
-                </motion.h1>
-              </motion.div>
-            ) : (
-              <div className="relative" aria-label="Echo Tango logo exploding animation">
-                {letters.map((letter, index) => (
-                  <motion.span
-                    key={index}
-                    className="absolute text-[#FF3B31] dark:text-[#FF7A6E] font-bold text-6xl tracking-tighter"
-                    style={{ 
-                      originX: 0.5,
-                      originY: 0.5,
-                      display: 'inline-block',
-                      left: `${index * 40}px`,
-                      top: 0
-                    }}
-                    initial={{ 
-                      opacity: 1,
-                      x: 0,
-                      y: 0,
-                      rotate: 0,
-                      scale: 2.8
-                    }}
-                    animate={{ 
-                      opacity: 0,
-                      x: letterDirectionsRef.current[index].x,
-                      y: letterDirectionsRef.current[index].y,
-                      rotate: letterDirectionsRef.current[index].rotate,
-                      scale: letterDirectionsRef.current[index].scale
-                    }}
-                    transition={{ 
-                      duration: 2.5, // Increased for smoother animation
-                      ease: [0.16, 1, 0.3, 1], // Improved easing for smoother explosion
-                      delay: index * 0.02 // Slightly reduced for more simultaneous explosion
-                    }}
-                    aria-hidden="true" // Hide from screen readers as it's decorative
-                  >
-                    {letter}
-                  </motion.span>
-                ))}
-              </div>
-            )}
-          </motion.div>
-        </CRTEffect>
+                  {letter}
+                </motion.span>
+              ))}
+            </div>
+          )}
+        </motion.div>
       )}
     </AnimatePresence>
   );

@@ -7,6 +7,7 @@ import SocialLinks from "../components/SocialLinks";
 import IntroAnimation from "../components/IntroAnimation";
 import RetroPlayer from "../components/RetroPlayer";
 import { useRetro } from '../contexts/RetroContext';
+import EmptyBox from "../components/EmptyBox";
 
 // Lazy load the VideoSection component as it's heavier with images
 const VideoSection = lazy(() => import("../components/VideoSection"));
@@ -126,7 +127,9 @@ const Index = () => {
               )}
             </div>
             
-            <div className="w-0 md:w-1/3 border-r-3 border-b-3 border-[#FF3B31] dark:border-[#FF7A6E]"></div>
+            <div className="w-full h-32 md:h-auto md:w-1/3 border-r-3 border-b-3 border-[#FF3B31] dark:border-[#FF7A6E]">
+              <EmptyBox />
+            </div>
             
             <div className="w-full md:w-1/3 border-r-3 border-b-3 border-[#FF3B31] dark:border-[#FF7A6E]">
               <Testimonial />

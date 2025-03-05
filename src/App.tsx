@@ -6,6 +6,7 @@ import NotFound from "./pages/NotFound";
 import VideoDemo from "./pages/VideoDemo";
 import { RetroProvider } from "./contexts/RetroContext";
 import { GrayscaleProvider } from "./contexts/GrayscaleContext";
+import DarkModeBorderFix from "./components/DarkModeBorderFix";
 
 const queryClient = new QueryClient();
 
@@ -14,6 +15,7 @@ const App = () => (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <RetroProvider>
         <GrayscaleProvider>
+          <DarkModeBorderFix />
           <BrowserRouter>
             <div className="min-h-screen relative">
               <Routes>

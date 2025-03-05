@@ -1,0 +1,32 @@
+<style>
+  /* Global border color overrides with high specificity */
+  
+  /* Dark mode borders - white */
+  html.dark [class*="border-[#FF3B31]"], 
+  html.dark [class*="border-[#FF7A6E]"] {
+    border-color: white !important;
+  }
+  
+  /* Regular light mode borders - red */
+  html:not(.dark):not(.grayscale-mode) [class*="border-[#FF3B31]"] {
+    border-color: #FF3B31 !important;
+  }
+  
+  html:not(.dark):not(.grayscale-mode) [class*="border-[#FF7A6E]"] {
+    border-color: #FF7A6E !important;
+  }
+  
+  /* Grayscale light mode borders - black */
+  html.grayscale-mode:not(.dark):not(.retro-mode) [class*="border-[#FF3B31]"],
+  html.grayscale-mode:not(.dark):not(.retro-mode) [class*="border-[#FF7A6E]"] {
+    border-color: black !important;
+  }
+  
+  /* Grayscale dark mode borders - white */
+  html.grayscale-mode.dark:not(.retro-mode) [class*="border-[#FF3B31]"],
+  html.grayscale-mode.dark:not(.retro-mode) [class*="border-[#FF7A6E]"] {
+    border-color: white !important;
+  }
+  
+  /* Retro mode keeps its existing colors */
+</style> 
