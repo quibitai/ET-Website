@@ -10,6 +10,9 @@ import { useRetro } from '../contexts/RetroContext';
 import EmptyBox from "../components/EmptyBox";
 import IndustryTerm from "../components/IndustryTerm";
 import { useIndustry } from "../contexts/IndustryContext";
+import { FlipProvider, useFlip } from "../contexts/FlipContext";
+import FlippableGridCell from "../components/FlippableGridCell";
+import { TermDefinition } from "../data/industryTerms";
 
 // Lazy load the VideoSection component as it's heavier with images
 const VideoSection = lazy(() => import("../components/VideoSection"));
@@ -109,63 +112,14 @@ const Index = () => {
           <Header initiallyHidden={!animationComplete} />
           {isRetro && <RetroPlayer />}
 
-          {/* 3x3 Grid with consistent border treatment */}
-          <div className="relative border-3 border-solid border-[#FF3B31] dark:border-[#FF3B31] dark:border-[#FF7A6E]">
-            <div className="grid grid-cols-3">
-              {/* Top row */}
-              <div className="col-span-2 row-span-2 border-r-3 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] min-h-[600px]">
-                <Slider slides={slides} />
-              </div>
-              
-              <div className="border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
-                <Suspense fallback={
-                  <div className="h-full w-full flex items-center justify-center">
-                    <div className="animate-pulse bg-[#FF3B31]/20 dark:bg-[#FF7A6E]/20 h-full w-full"></div>
-                  </div>
-                }>
-                  <div className="h-full w-full">
-                    <VideoSection />
-                  </div>
-                </Suspense>
-              </div>
-              
-              {/* Middle row - right cell */}
-              <div className="border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
-                <div className="h-full">
-                  <div className={`${bgColor} p-8 h-full flex items-center`}>
-                    <IndustryTerm term={randomTerm} />
-                  </div>
-                </div>
-              </div>
-              
-              {/* Bottom row */}
-              <div className="border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
-                <ContactForm />
-                {isRetro && (
-                  <div className="visitor-counter">
-                    <img 
-                      src="data:image/gif;base64,R0lGODlhEAAQALMAAAAAAP///+7u7t3d3bu7u6qqqpmZmYiIiHd3d2ZmZlVVVURERDMzMyIiIhEREQAAACH+AS4ALAAAAAAQABAAAARFEMj3gL0P4pzUMIqrcB0XBuIYjgNWnIWVJMqVkgGYQEHQhLwwfBaYBYP5gUAQ1GWBXhZIyfgVQTEpKFSi2CwWg+VqtQgAOw==" 
-                      alt="Under Construction"
-                      className="construction"
-                    />
-                    <div>
-                      Visitors: {localStorage.getItem('visitor-count')?.padStart(6, '0') || '000000'}
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              <div className="border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
-                <EmptyBox />
-              </div>
-              
-              <div className="h-[300px]">
-                <div className="h-full">
-                  <Testimonial />
-                </div>
-              </div>
-            </div>
-          </div>
+          <FlipProvider>
+            <GridContent
+              slides={slides}
+              randomTerm={randomTerm}
+              bgColor={bgColor}
+              isRetro={isRetro}
+            />
+          </FlipProvider>
           
           {/* Social links */}
           <div className="flex justify-end mt-4">
@@ -176,6 +130,183 @@ const Index = () => {
         </div>
       </div>
     </>
+  );
+};
+
+// Extract grid content to a separate component to use the FlipContext
+const GridContent: React.FC<{
+  slides: any[];
+  randomTerm: TermDefinition;
+  bgColor: string;
+  isRetro: boolean;
+}> = ({ slides, randomTerm, bgColor, isRetro }) => {
+  const { isFlipped } = useFlip();
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [slideDirection, setSlideDirection] = useState<"left" | "right" | null>(null);
+
+  const goToNextSlide = () => {
+    if (isAnimating) return;
+    
+    setIsAnimating(true);
+    setSlideDirection("right");
+    
+    setTimeout(() => {
+      setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 50);
+    }, 300);
+  };
+
+  const goToPrevSlide = () => {
+    if (isAnimating) return;
+    
+    setIsAnimating(true);
+    setSlideDirection("left");
+    
+    setTimeout(() => {
+      setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 50);
+    }, 300);
+  };
+  
+  // Get transition classes for slide effect
+  const getDescriptionTransitionClasses = () => {
+    const baseClasses = "transition-all duration-300 absolute w-full";
+    
+    if (!isAnimating) {
+      return `${baseClasses} transform translate-x-0`;
+    }
+    
+    if (slideDirection === "right") {
+      return `${baseClasses} transform -translate-x-full`;
+    } else {
+      return `${baseClasses} transform translate-x-full`;
+    }
+  };
+  
+  return (
+    /* 3x3 Grid with consistent border treatment */
+    <div className="relative border-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E]">
+      <div className="grid grid-cols-3 perspective-1000">
+        <div className="slider-flip-container col-span-3 grid grid-cols-3" data-flipped={isFlipped}>
+          {/* Top-left 2x2 area for slider */}
+          <div className="col-span-2 row-span-2 border-r-3 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[600px] relative">
+            {/* Hidden flippable cells for the animation */}
+            <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 hidden-flip-cells opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+              <FlippableGridCell index={1} className="border-r-3 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+                <div></div>
+              </FlippableGridCell>
+              <FlippableGridCell index={2} className="border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+                <div></div>
+              </FlippableGridCell>
+              <FlippableGridCell index={4} className="border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+                <div></div>
+              </FlippableGridCell>
+              <FlippableGridCell index={5} className="h-[300px]">
+                <div></div>
+              </FlippableGridCell>
+            </div>
+            
+            {/* Visible unified slider */}
+            <div className="unified-slider h-full w-full overflow-hidden transition-opacity duration-300 flex items-center justify-center">
+              <div className="h-full w-full flex flex-col p-12 md:p-16 relative bg-[#F0EBE6] dark:bg-[#16192E]">
+                <div className="flex flex-col justify-center h-full mx-auto max-w-[80%] pt-16">
+                  {/* Fixed title that doesn't change - exact match with screenshot */}
+                  <h2 className="text-[#FF3B31] dark:text-[#FF7A6E] font-serif text-[40px] sm:text-[44px] md:text-[48px] leading-tight font-normal">
+                    Every brand has a story worth
+                    <br />telling, <span className="font-medium bg-[#FF3B31] dark:bg-[#FF7A6E] text-white px-4 py-1">and telling well.</span>
+                  </h2>
+                  
+                  {/* Custom slider for descriptions only with animation */}
+                  <div className="relative w-full flex-grow overflow-hidden mt-10">
+                    <div className={getDescriptionTransitionClasses()}>
+                      <p className="text-[#FF3B31] dark:text-[#FF7A6E] font-mono text-base md:text-[18px] leading-relaxed">
+                        {slides[currentSlide].description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Navigation buttons - slightly smaller than before */}
+                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-8">
+                  <button 
+                    className="w-16 h-16 flex items-center justify-center text-[#FF3B31] dark:text-[#FF7A6E] transition-colors" 
+                    onClick={goToPrevSlide}
+                    aria-label="Previous slide"
+                  >
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M15 6L9 12L15 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                  <button 
+                    className="w-16 h-16 flex items-center justify-center text-[#FF3B31] dark:text-[#FF7A6E] transition-colors" 
+                    onClick={goToNextSlide}
+                    aria-label="Next slide"
+                  >
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Third cell in top row */}
+          <FlippableGridCell index={3} className="border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+            <Suspense fallback={
+              <div className="h-full w-full flex items-center justify-center">
+                <div className="animate-pulse bg-[#FF3B31]/20 dark:bg-[#FF7A6E]/20 h-full w-full"></div>
+              </div>
+            }>
+              <div className="h-full w-full">
+                <VideoSection />
+              </div>
+            </Suspense>
+          </FlippableGridCell>
+          
+          {/* Third row cell (second column already covered by slider) */}
+          <FlippableGridCell index={6} className="border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+            <div className="h-full">
+              <div className={`${bgColor} p-8 h-full flex items-center`}>
+                <IndustryTerm term={randomTerm} />
+              </div>
+            </div>
+          </FlippableGridCell>
+          
+          {/* Bottom row */}
+          <FlippableGridCell index={7} className="border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+            <ContactForm />
+            {isRetro && (
+              <div className="visitor-counter">
+                <img 
+                  src="data:image/gif;base64,R0lGODlhEAAQALMAAAAAAP///+7u7t3d3bu7u6qqqpmZmYiIiHd3d2ZmZlVVVURERDMzMyIiIhEREQAAACH+AS4ALAAAAAAQABAAAARFEMj3gL0P4pzUMIqrcB0XBuIYjgNWnIWVJMqVkgGYQEHQhLwwfBaYBYP5gUAQ1GWBXhZIyfgVQTEpKFSi2CwWg+VqtQgAOw==" 
+                  alt="Under Construction"
+                  className="construction"
+                />
+                <div>
+                  Visitors: {localStorage.getItem('visitor-count')?.padStart(6, '0') || '000000'}
+                </div>
+              </div>
+            )}
+          </FlippableGridCell>
+          
+          <FlippableGridCell index={8} className="border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+            <EmptyBox />
+          </FlippableGridCell>
+          
+          <FlippableGridCell index={9} className="h-[300px]">
+            <div className="h-full">
+              <Testimonial />
+            </div>
+          </FlippableGridCell>
+        </div>
+      </div>
+    </div>
   );
 };
 

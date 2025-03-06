@@ -3,6 +3,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../com
 import { motion } from "framer-motion";
 import { Sun, Moon, History, EyeOff } from "lucide-react";
 import { useTheme } from "../theme";
+import { useFlip } from "../contexts/FlipContext";
 
 interface HeaderProps {
   initiallyHidden?: boolean;
@@ -21,9 +22,10 @@ const Header: React.FC<HeaderProps> = ({ initiallyHidden = false }) => {
     isGrayscale, 
     toggleColorMode, 
     toggleRetro, 
-    toggleGrayscale 
+    toggleGrayscale
   } = useTheme();
   
+  const { isFlipped, toggleFlip, setFlipped } = useFlip();
   const [logoVisible, setLogoVisible] = useState(!initiallyHidden);
   
   useEffect(() => {
@@ -39,14 +41,24 @@ const Header: React.FC<HeaderProps> = ({ initiallyHidden = false }) => {
     }
   }, [initiallyHidden]);
 
+  const handleLogoClick = () => {
+    // If grid is flipped, unflip it
+    if (isFlipped) {
+      setFlipped(false);
+    }
+  };
+
   return (
     <header className="flex justify-between items-center mb-4" role="banner">
       <div className="flex items-center gap-4">
         <motion.h1 
-          className="text-brand dark:text-brand-light font-bold text-2xl tracking-tighter"
+          onClick={handleLogoClick}
+          className={`text-brand dark:text-brand-light font-bold text-2xl tracking-tighter cursor-pointer hover:brightness-110 transition-all ${isFlipped ? 'opacity-90' : ''}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: logoVisible ? 1 : 0 }}
           transition={{ duration: 1.0, ease: [0.25, 0.1, 0.25, 1.0] }}
+          role="button"
+          aria-label={isFlipped ? "Return to main view" : "Echo Tango"}
         >
           echotango
         </motion.h1>

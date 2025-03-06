@@ -10,6 +10,7 @@ import { ThemeProvider, BorderFix } from "./theme";
 import { RetroProvider } from "./contexts/RetroContext";
 import { IndustryProvider } from "./contexts/IndustryContext";
 import { ContentProvider } from "./content";
+import { FlipProvider } from "./contexts/FlipContext";
 
 const queryClient = new QueryClient();
 
@@ -23,20 +24,22 @@ const App = () => (
       <RetroProvider>
         <IndustryProvider>
           <ContentProvider>
-            <BorderFix />
-            <BrowserRouter>
-              <div className="min-h-screen relative">
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  {/* Routes for new implementations */}
-                  <Route path="/grid" element={<IndexGrid />} />
-                  <Route path="/themed" element={<IndexThemed />} />
-                  <Route path="/video-demo" element={<VideoDemo />} />
-                  <Route path="/content-demo" element={<ContentSystemDemo />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </div>
-            </BrowserRouter>
+            <FlipProvider>
+              <BorderFix />
+              <BrowserRouter>
+                <div className="min-h-screen relative">
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    {/* Routes for new implementations */}
+                    <Route path="/grid" element={<IndexGrid />} />
+                    <Route path="/themed" element={<IndexThemed />} />
+                    <Route path="/video-demo" element={<VideoDemo />} />
+                    <Route path="/content-demo" element={<ContentSystemDemo />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </div>
+              </BrowserRouter>
+            </FlipProvider>
           </ContentProvider>
         </IndustryProvider>
       </RetroProvider>

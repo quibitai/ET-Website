@@ -4,15 +4,14 @@ import { useTheme, getBackgroundColor, getGridColor, getGridOpacity } from "../t
 import { useFlip } from "../contexts/FlipContext";
 
 /**
- * EmptyBox component
+ * HomeBox component
  * 
- * Displays a flickering grid with "WORK" text overlay.
- * Uses the unified theme system to maintain consistent appearances
- * across standard, grayscale, and retro modes.
+ * Displays a flickering grid with "HOME" text overlay.
+ * Used in the flipped state of the grid.
  */
-const EmptyBox: React.FC = () => {
+const HomeBox: React.FC = () => {
   const { resolvedColorMode, visualMode, isDark, isRetro } = useTheme();
-  const { toggleFlip } = useFlip();
+  const { setFlipped } = useFlip();
   
   // Get the appropriate background color for the current theme
   const bgColor = getBackgroundColor(isDark, visualMode);
@@ -22,6 +21,11 @@ const EmptyBox: React.FC = () => {
   
   // Get appropriate opacity based on theme
   const gridOpacity = getGridOpacity(isDark, visualMode);
+
+  const handleHomeClick = () => {
+    // Flip back to the main view
+    setFlipped(false);
+  };
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -35,9 +39,9 @@ const EmptyBox: React.FC = () => {
       />
       <div className="absolute inset-0 flex items-center justify-center">
         <button 
-          onClick={toggleFlip}
+          onClick={handleHomeClick}
           className="bg-transparent border-0 p-0 cursor-pointer outline-none focus:outline-none hover:!bg-transparent"
-          aria-label="Flip grid to show video thumbnails"
+          aria-label="Flip grid to show main content"
         >
           <div 
             className="text-7xl md:text-8xl font-black tracking-wider transform transition-all duration-300 hover:scale-105 select-none" 
@@ -46,7 +50,7 @@ const EmptyBox: React.FC = () => {
               textShadow: '3px 3px 0px rgba(0,0,0,0.1)'
             }}
           >
-            WORK
+            HOME
           </div>
         </button>
       </div>
@@ -54,4 +58,4 @@ const EmptyBox: React.FC = () => {
   );
 };
 
-export default EmptyBox; 
+export default HomeBox; 

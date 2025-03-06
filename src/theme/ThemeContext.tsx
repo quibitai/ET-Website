@@ -44,9 +44,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   // Initialize state from localStorage if available
   const [colorMode, setColorModeState] = useState<ColorMode>(() => {
     if (typeof window !== 'undefined') {
-      return (localStorage.getItem('color-mode') as ColorMode) || 'system';
+      return (localStorage.getItem('color-mode') as ColorMode) || 'light';
     }
-    return 'system';
+    return 'light';
   });
 
   const [visualMode, setVisualModeState] = useState<VisualMode>(() => {
