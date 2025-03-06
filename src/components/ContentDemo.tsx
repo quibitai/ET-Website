@@ -100,7 +100,7 @@ export const ContentDemo: React.FC = () => {
                       )}
                       {slide.ctaText && (
                         <div className="mt-2">
-                          <button className="px-4 py-1 bg-black text-white text-sm rounded">
+                          <button className="px-4 py-1 bg-black text-[#F5F5F5] text-sm rounded">
                             {slide.ctaText}
                           </button>
                           <p className="text-xs text-gray-500 mt-1">Links to: {slide.ctaLink}</p>
@@ -141,7 +141,7 @@ export const ContentDemo: React.FC = () => {
                       key={category}
                       className={`px-3 py-1 rounded text-sm ${
                         selectedCategory === category
-                          ? 'bg-black text-white'
+                          ? 'bg-black text-[#F5F5F5]'
                           : 'bg-gray-200 hover:bg-gray-300'
                       }`}
                       onClick={() => setSelectedCategory(category)}

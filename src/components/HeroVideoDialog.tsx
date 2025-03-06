@@ -73,8 +73,8 @@ const HeroVideoDialog: React.FC<HeroVideoDialogProps> = ({
           aria-label="Play 2025 demo reel"
         >
           <div className="flex flex-col items-center justify-center">
-            <Clapperboard className="text-[#FFEB94] w-16 h-16" aria-hidden="true" />
-            <p className="text-[#FFEB94] mt-2 text-xl font-medium">play 2025 reel</p>
+            <Clapperboard className="text-[#FF7A6E] w-16 h-16" aria-hidden="true" />
+            <p className="text-[#FF7A6E] mt-2 text-xl font-medium">play 2025 reel</p>
           </div>
         </button>
       );
@@ -91,8 +91,8 @@ const HeroVideoDialog: React.FC<HeroVideoDialogProps> = ({
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 z-10 w-full h-full group-hover:bg-black/40 transition-colors duration-300">
             <div className="flex flex-col items-center justify-center">
-              <Clapperboard className="text-[#FFEB94] w-16 h-16" aria-hidden="true" />
-              <p className="text-[#FFEB94] mt-2 text-xl font-medium">play 2025 reel</p>
+              <Clapperboard className="text-[#FF7A6E] w-16 h-16" aria-hidden="true" />
+              <p className="text-[#FF7A6E] mt-2 text-xl font-medium">play 2025 reel</p>
             </div>
           </div>
         </div>
@@ -112,7 +112,7 @@ const HeroVideoDialog: React.FC<HeroVideoDialogProps> = ({
       >
         <button 
           onClick={() => setIsOpen(false)}
-          className="absolute right-4 top-4 z-10 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 focus:outline-none focus:ring-2 focus:ring-[#FF3B31] dark:focus:ring-[#FF7A6E]"
+          className="absolute right-4 top-4 z-10 rounded-full bg-black/50 p-2 text-[#F5F5F5] hover:bg-black/70 focus:outline-none focus:ring-2 focus:ring-[#FF3B31] dark:focus:ring-[#FF7A6E]"
           aria-label="Close video"
         >
           <X className="h-5 w-5" />

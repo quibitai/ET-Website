@@ -59,7 +59,7 @@ const IndexGrid: React.FC = () => {
   }, [prefersReducedMotion]);
 
   return (
-    <div className="w-full min-h-screen bg-[#F0EBE6] dark:bg-[#191919] text-black dark:text-white">
+    <div className="w-full min-h-screen bg-[#F5F5F5] dark:bg-[#191919] text-black dark:text-white">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <Header />

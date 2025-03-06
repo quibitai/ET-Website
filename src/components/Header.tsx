@@ -79,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({ initiallyHidden = false }) => {
                   }`}
                   aria-label={`Toggle ${isGrayscale ? "color" : "grayscale"} mode`}
                 >
-                  <EyeOff size={14} className="text-white" />
+                  <EyeOff size={14} className="text-[#F5F5F5]" />
                 </button>
               </TooltipTrigger>
               <TooltipContent>
@@ -101,7 +101,7 @@ const Header: React.FC<HeaderProps> = ({ initiallyHidden = false }) => {
                   }`}
                   aria-label={`Toggle ${isRetro ? "modern" : "retro"} mode`}
                 >
-                  <History size={14} className="text-white" />
+                  <History size={14} className="text-[#F5F5F5]" />
                 </button>
               </TooltipTrigger>
               <TooltipContent>
@@ -122,16 +122,16 @@ const Header: React.FC<HeaderProps> = ({ initiallyHidden = false }) => {
                   aria-label={`Toggle ${isDark ? "light" : "dark"} mode`}
                 >
                   {/* Sun icon */}
-                  <span className="absolute left-2 text-white">
+                  <span className="absolute left-2 text-[#F5F5F5]">
                     <Sun size={14} />
                   </span>
                   {/* Moon icon */}
-                  <span className="absolute right-2 text-white">
+                  <span className="absolute right-2 text-[#F5F5F5]">
                     <Moon size={14} />
                   </span>
                   {/* Toggle dot */}
                   <div 
-                    className={`w-5 h-5 bg-white transition-all duration-300 rounded-full mx-1
+                    className={`w-5 h-5 bg-[#F5F5F5] transition-all duration-300 rounded-full mx-1
                       ${isDark ? 'ml-auto' : 'mr-auto'}`}
                   />
                 </button>

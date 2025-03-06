@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from "react";
 import { Clapperboard, X } from "lucide-react";
 import { useIndustry } from "../contexts/IndustryContext";
-import HeroVideoDialog from "./HeroVideoDialog";
-import { Dialog, DialogContent } from "./ui/dialog";
+import ReactDOM from "react-dom";
 
 // Array of image paths
 const images = [
@@ -22,10 +21,85 @@ const preloadImages = () => {
   });
 };
 
+// Modal component that will be rendered outside the DOM hierarchy
+const VideoModal = ({ onClose, videoUrl }: { onClose: () => void, videoUrl: string }) => {
+  // Store the original grayscale state to restore it on close
+  const [wasGrayscaleEnabled, setWasGrayscaleEnabled] = useState(false);
+  const grayscaleRef = useRef(false);
+
+  // On mount, check if grayscale is active and disable it temporarily
+  useEffect(() => {
+    const htmlElement = document.documentElement;
+    const hasGrayscale = htmlElement.classList.contains('grayscale-mode');
+    
+    // Store in state for re-renders
+    setWasGrayscaleEnabled(hasGrayscale);
+    
+    // Also store in ref for cleanup function
+    grayscaleRef.current = hasGrayscale;
+    
+    // If in grayscale mode, temporarily remove it
+    if (hasGrayscale) {
+      htmlElement.classList.remove('grayscale-mode');
+    }
+    
+    // Restore grayscale mode when component unmounts
+    return () => {
+      if (grayscaleRef.current) {
+        htmlElement.classList.add('grayscale-mode');
+      }
+    };
+  }, []);
+  
+  // Handle closing with restoring grayscale if needed
+  const handleClose = () => {
+    // Restore grayscale immediately before closing the modal
+    if (grayscaleRef.current) {
+      document.documentElement.classList.add('grayscale-mode');
+    }
+    // Then close the modal
+    onClose();
+  };
+  
+  // Create a portal to render this outside the normal DOM flow
+  return ReactDOM.createPortal(
+    <div 
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80" 
+      style={{ backdropFilter: 'blur(5px)' }}
+    >
+      <div className="relative w-full max-w-4xl mx-auto px-4">
+        <button 
+          onClick={handleClose}
+          className="absolute -top-10 right-2 z-50 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors"
+          aria-label="Close video"
+        >
+          <X size={24} />
+        </button>
+        
+        <div style={{padding:'56.25% 0 0 0', position:'relative'}} className="relative">
+          <iframe 
+            src={videoUrl}
+            style={{position:'absolute', top:0, left:0, width:'100%', height:'100%'}}
+            frameBorder="0"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
+            allowFullScreen
+            title="Echo Tango 2025 Reel"
+          />
+        </div>
+        
+        <div className="text-center mt-4">
+          <h3 className="text-white text-base font-medium">Unmute</h3>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+};
+
 const VideoSection: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { getRandomTerm } = useIndustry();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -43,14 +117,24 @@ const VideoSection: React.FC = () => {
   // Preload images on mount
   useEffect(() => {
     preloadImages();
+    
+    // Load Vimeo Player API script
+    if (!document.querySelector('script[src="https://player.vimeo.com/api/player.js"]')) {
+      const script = document.createElement('script');
+      script.src = "https://player.vimeo.com/api/player.js";
+      document.body.appendChild(script);
+    }
   }, []);
 
   // Set up the image cycling interval
   useEffect(() => {
-    if (isPlaying && !isDialogOpen) {
+    if (isPlaying && !isModalOpen) {
       intervalRef.current = setInterval(() => {
         setCurrentImageIndex(prevIndex => (prevIndex + 1) % images.length);
-      }, 500); // Change image every 500ms
+      }, 1000);
+    } else if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
 
     return () => {
@@ -59,33 +143,38 @@ const VideoSection: React.FC = () => {
         intervalRef.current = null;
       }
     };
-  }, [isPlaying, isDialogOpen]);
+  }, [isPlaying, isModalOpen]);
 
-  // Toggle play/pause
-  const togglePlayPause = () => {
+  // Toggle play/pause for the image slideshow
+  const togglePlayPause = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsPlaying(prev => !prev);
   };
 
-  // Open the dialog
-  const openDialog = () => {
-    setIsDialogOpen(true);
-    setIsPlaying(false); // Pause the animation when dialog opens
+  // Open the video modal
+  const openVideoModal = () => {
+    setIsModalOpen(true);
+    setIsPlaying(false); // Pause the animation
   };
 
-  // Close the dialog
-  const closeDialog = () => {
-    setIsDialogOpen(false);
-    setIsPlaying(true); // Resume the animation when dialog closes
-    getRandomTerm(); // Just get a new term but don't need to store it
+  // Close the video modal
+  const closeVideoModal = () => {
+    setIsModalOpen(false);
+    setIsPlaying(true); // Resume the animation
+    getRandomTerm(); // Get a new term just for fun
   };
 
-  // Memoize the VideoSection component
+  // Get the Vimeo video URL with parameters
+  const getVideoUrl = () => {
+    return "https://player.vimeo.com/video/1058267807?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1";
+  };
+
   return (
-    <div className="w-full h-full bg-black overflow-hidden">
+    <div className="w-full h-full bg-black overflow-hidden relative">
       {/* Image display with cycling effect */}
       <div 
         className="relative w-full h-full cursor-pointer group"
-        onClick={openDialog}
+        onClick={openVideoModal}
       >
         {images.map((src, index) => (
           <img
@@ -100,11 +189,8 @@ const VideoSection: React.FC = () => {
         
         {/* Play/pause button */}
         <button 
-          onClick={(e) => {
-            e.stopPropagation();
-            togglePlayPause();
-          }}
-          className="absolute bottom-2 left-2 bg-black/70 hover:bg-black text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+          onClick={togglePlayPause}
+          className="absolute bottom-2 left-2 bg-black/70 hover:bg-black text-[#F5F5F5] p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
           aria-label={isPlaying ? "Pause animation" : "Play animation"}
         >
           {isPlaying ? (
@@ -121,33 +207,17 @@ const VideoSection: React.FC = () => {
         
         {/* Play video overlay */}
         <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
-          <div className="bg-white dark:bg-gray-900 rounded-full p-2 transform transition-transform group-hover:scale-110">
-            <Clapperboard size={24} className="text-[#FF3B31] dark:text-[#FFEB94]" />
+          <div className="flex flex-col items-center justify-center">
+            <div className="bg-[#F5F5F5] dark:bg-gray-900 rounded-full p-2 transform transition-transform group-hover:scale-110">
+              <Clapperboard size={24} className="text-[#FF3B31] dark:text-[#FF7A6E]" />
+            </div>
+            <p className="text-[#F5F5F5] mt-2 text-xs md:text-sm font-medium">play 2025 reel</p>
           </div>
-          <span className="absolute bottom-2 right-2 text-white text-xs font-medium bg-black/70 px-2 py-1 rounded">
-            Watch Demo
-          </span>
         </div>
       </div>
-      
-      {/* Video Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-4xl p-0 border-0 overflow-hidden bg-transparent" onInteractOutside={closeDialog}>
-          <button 
-            onClick={closeDialog}
-            className="absolute right-2 top-2 z-50 bg-black/70 text-white p-1 rounded-full hover:bg-black/90 transition-colors"
-            aria-label="Close dialog"
-          >
-            <X size={20} />
-          </button>
-          <HeroVideoDialog 
-            videoSrc="https://player.vimeo.com/video/715386363"
-            thumbnailSrc={images[0]}
-            thumbnailAlt="Echo Tango Demo Reel" 
-            animationStyle="from-center"
-          />
-        </DialogContent>
-      </Dialog>
+
+      {/* Video Modal - Rendered with portal outside the DOM hierarchy */}
+      {isModalOpen && <VideoModal onClose={closeVideoModal} videoUrl={getVideoUrl()} />}
     </div>
   );
 };

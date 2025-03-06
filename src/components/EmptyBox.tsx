@@ -1,55 +1,44 @@
-import React from "react";
-import { FlickeringGrid } from "./FlickeringGrid";
-import { useTheme, getBackgroundColor, getGridColor, getGridOpacity } from "../theme";
+import React, { useState } from "react";
+import { useTheme } from "../theme";
 import { useFlip } from "../contexts/FlipContext";
 
 /**
  * EmptyBox component
  * 
- * Displays a flickering grid with "WORK" text overlay.
+ * Displays "WORK" text with hover effect.
  * Uses the unified theme system to maintain consistent appearances
- * across standard, grayscale, and retro modes.
+ * across light and dark modes.
  */
 const EmptyBox: React.FC = () => {
-  const { resolvedColorMode, visualMode, isDark, isRetro } = useTheme();
+  const { isDark } = useTheme();
   const { toggleFlip } = useFlip();
-  
-  // Get the appropriate background color for the current theme
-  const bgColor = getBackgroundColor(isDark, visualMode);
-  
-  // Get the grid color based on current theme
-  const gridColor = getGridColor(isDark, visualMode);
-  
-  // Get appropriate opacity based on theme
-  const gridOpacity = getGridOpacity(isDark, visualMode);
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="relative h-full w-full overflow-hidden">
-      <FlickeringGrid 
-        color={gridColor}
-        maxOpacity={gridOpacity}
-        squareSize={2}
-        gridGap={1}
-        flickerChance={0.07}
-        className="absolute inset-0"
-      />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <button 
-          onClick={toggleFlip}
-          className="bg-transparent border-0 p-0 cursor-pointer outline-none focus:outline-none hover:!bg-transparent"
-          aria-label="Flip grid to show video thumbnails"
+    <div 
+      className={`relative h-full w-full overflow-hidden transition-colors duration-300 flex items-center justify-center ${
+        isHovered 
+          ? 'bg-[#FF3B31] dark:bg-[#FF7A6E]' 
+          : 'bg-[#F5F5F5] dark:bg-[#16192E]'
+      }`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <button 
+        onClick={toggleFlip}
+        className="bg-transparent border-0 p-0 cursor-pointer outline-none focus:outline-none w-full h-full flex items-center justify-center"
+        aria-label="Flip grid to show video thumbnails"
+      >
+        <div 
+          className={`text-7xl md:text-8xl font-black tracking-wider select-none transition-all duration-300 ${
+            isHovered 
+              ? 'text-[#F5F5F5] dark:text-[#16192E]' 
+              : 'text-[#FF3B31] dark:text-[#FF7A6E]'
+          }`}
         >
-          <div 
-            className="text-7xl md:text-8xl font-black tracking-wider transform transition-all duration-300 hover:scale-105 select-none" 
-            style={{ 
-              color: bgColor,
-              textShadow: '3px 3px 0px rgba(0,0,0,0.1)'
-            }}
-          >
-            WORK
-          </div>
-        </button>
-      </div>
+          WORK
+        </div>
+      </button>
     </div>
   );
 };

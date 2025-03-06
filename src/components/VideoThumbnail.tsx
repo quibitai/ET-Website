@@ -24,7 +24,7 @@ const VideoThumbnail: React.FC<VideoThumbnailProps> = ({ index }) => {
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
             viewBox="0 0 24 24" 
-            fill="white" 
+            fill="#F5F5F5" 
             className="w-6 h-6"
           >
             <path d="M8 5v14l11-7z" />

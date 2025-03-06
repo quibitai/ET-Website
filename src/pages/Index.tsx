@@ -32,7 +32,7 @@ const Index = () => {
       title: "Every brand has a story worth telling,",
       titleBold: "and telling well.",
       description: "We bring together the brand designers and visual storytellers, the artists and the filmmakers, the illustrators, animators, writers, the editors...throw them into the creative sandbox, and make some magic happen.",
-      titleBoldColor: "#F0EBE6" // Match the background color for "and telling well."
+      titleBoldColor: "#F5F5F5" // Match the background color for "and telling well."
     },
     {
       title: "Better yet, invite everyone ",
@@ -94,7 +94,7 @@ const Index = () => {
   }, []);
 
   // Get background color based on dark/light mode
-  const bgColor = "bg-[#F0EBE6] dark:bg-[#16192E]";
+  const bgColor = "bg-[#F5F5F5] dark:bg-[#16192E]";
 
   return (
     <>
@@ -133,49 +133,37 @@ const Index = () => {
   );
 };
 
-// Extract grid content to a separate component to use the FlipContext
-const GridContent: React.FC<{
-  slides: any[];
-  randomTerm: TermDefinition;
-  bgColor: string;
-  isRetro: boolean;
-}> = ({ slides, randomTerm, bgColor, isRetro }) => {
-  const { isFlipped } = useFlip();
+// GridContent component to handle the grid layout
+const GridContent = ({ slides, randomTerm, bgColor, isRetro }) => {
+  const { isFlipped, bordersVisible } = useFlip();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [slideDirection, setSlideDirection] = useState("right");
   const [isAnimating, setIsAnimating] = useState(false);
-  const [slideDirection, setSlideDirection] = useState<"left" | "right" | null>(null);
-
+  
+  // Handle slide navigation
   const goToNextSlide = () => {
     if (isAnimating) return;
-    
-    setIsAnimating(true);
     setSlideDirection("right");
-    
-    setTimeout(() => {
-      setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 50);
-    }, 300);
-  };
-
-  const goToPrevSlide = () => {
-    if (isAnimating) return;
-    
     setIsAnimating(true);
-    setSlideDirection("left");
-    
     setTimeout(() => {
-      setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 50);
-    }, 300);
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+      setIsAnimating(false);
+    }, 500);
   };
   
-  // Get transition classes for slide effect
+  const goToPrevSlide = () => {
+    if (isAnimating) return;
+    setSlideDirection("left");
+    setIsAnimating(true);
+    setTimeout(() => {
+      setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+      setIsAnimating(false);
+    }, 500);
+  };
+  
+  // Get transition classes for the description
   const getDescriptionTransitionClasses = () => {
-    const baseClasses = "transition-all duration-300 absolute w-full";
+    const baseClasses = "transition-transform duration-500 ease-in-out";
     
     if (!isAnimating) {
       return `${baseClasses} transform translate-x-0`;
@@ -190,41 +178,42 @@ const GridContent: React.FC<{
   
   return (
     /* 3x3 Grid with consistent border treatment */
-    <div className="relative border-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E]">
-      <div className="grid grid-cols-3 perspective-1000">
-        <div className="slider-flip-container col-span-3 grid grid-cols-3" data-flipped={isFlipped}>
+    <div className={`relative border-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] grid-border-animation`} data-borders-visible={bordersVisible}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 perspective-1000">
+        <div className="slider-flip-container col-span-1 sm:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" data-flipped={isFlipped}>
           {/* Top-left 2x2 area for slider */}
-          <div className="col-span-2 row-span-2 border-r-3 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[600px] relative">
+          <div className="col-span-1 sm:col-span-2 row-span-2 border-r-0 sm:border-r-3 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px] sm:h-[450px] lg:h-[600px] relative">
             {/* Hidden flippable cells for the animation */}
-            <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 hidden-flip-cells opacity-0 pointer-events-none transition-opacity duration-300 z-10">
-              <FlippableGridCell index={1} className="border-r-3 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+            <div className="absolute inset-0 grid grid-cols-1 sm:grid-cols-2 grid-rows-2 hidden-flip-cells opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+              <FlippableGridCell index={1} className="border-r-0 sm:border-r-3 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[150px] sm:h-[225px] lg:h-[300px]">
                 <div></div>
               </FlippableGridCell>
-              <FlippableGridCell index={2} className="border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+              <FlippableGridCell index={2} className="border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[150px] sm:h-[225px] lg:h-[300px]">
                 <div></div>
               </FlippableGridCell>
-              <FlippableGridCell index={4} className="border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+              <FlippableGridCell index={3} className="border-r-0 sm:border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[150px] sm:h-[225px] lg:h-[300px]">
                 <div></div>
               </FlippableGridCell>
-              <FlippableGridCell index={5} className="h-[300px]">
+              <FlippableGridCell index={4} className="h-[150px] sm:h-[225px] lg:h-[300px]">
                 <div></div>
               </FlippableGridCell>
             </div>
             
             {/* Visible unified slider */}
             <div className="unified-slider h-full w-full overflow-hidden transition-opacity duration-300 flex items-center justify-center">
-              <div className="h-full w-full flex flex-col p-12 md:p-16 relative bg-[#F0EBE6] dark:bg-[#16192E]">
-                <div className="flex flex-col justify-center h-full mx-auto max-w-[80%] pt-16">
+              <div className="h-full w-full flex flex-col p-4 sm:p-8 md:p-12 lg:p-16 relative bg-[#F5F5F5] dark:bg-[#16192E]">
+                <div className="flex flex-col justify-center h-full mx-auto max-w-[95%] sm:max-w-[90%] md:max-w-[80%] pt-4 sm:pt-8 md:pt-16">
                   {/* Fixed title that doesn't change - exact match with screenshot */}
-                  <h2 className="text-[#FF3B31] dark:text-[#FF7A6E] font-serif text-[40px] sm:text-[44px] md:text-[48px] leading-tight font-normal">
-                    Every brand has a story worth
-                    <br />telling, <span className="font-medium bg-[#FF3B31] dark:bg-[#FF7A6E] text-white px-4 py-1">and telling well.</span>
+                  <h2 className="text-[#FF3B31] dark:text-[#FF7A6E] font-serif text-[28px] xs:text-[32px] sm:text-[36px] md:text-[44px] lg:text-[48px] leading-tight font-normal">
+                    <span className="inline sm:hidden">Every brand has a story worth telling,</span>
+                    <span className="hidden sm:inline">Every brand has a story worth
+                    <br />telling,</span> <span className="font-medium bg-[#FF3B31] dark:bg-[#FF7A6E] text-[#F5F5F5] px-2 sm:px-4 py-1 inline-block sm:inline my-1 sm:my-0">and telling well.</span>
                   </h2>
                   
                   {/* Custom slider for descriptions only with animation */}
-                  <div className="relative w-full flex-grow overflow-hidden mt-10">
+                  <div className="relative w-full flex-grow overflow-hidden mt-4 sm:mt-6 md:mt-10">
                     <div className={getDescriptionTransitionClasses()}>
-                      <p className="text-[#FF3B31] dark:text-[#FF7A6E] font-mono text-base md:text-[18px] leading-relaxed">
+                      <p className="text-[#FF3B31] dark:text-[#FF7A6E] font-mono text-sm sm:text-base md:text-[18px] leading-relaxed">
                         {slides[currentSlide].description}
                       </p>
                     </div>
@@ -232,22 +221,22 @@ const GridContent: React.FC<{
                 </div>
 
                 {/* Navigation buttons - slightly smaller than before */}
-                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-8">
+                <div className="absolute bottom-2 sm:bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex gap-4 sm:gap-8">
                   <button 
-                    className="w-16 h-16 flex items-center justify-center text-[#FF3B31] dark:text-[#FF7A6E] transition-colors" 
+                    className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 flex items-center justify-center text-[#FF3B31] dark:text-[#FF7A6E] transition-colors" 
                     onClick={goToPrevSlide}
                     aria-label="Previous slide"
                   >
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10">
                       <path d="M15 6L9 12L15 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </button>
                   <button 
-                    className="w-16 h-16 flex items-center justify-center text-[#FF3B31] dark:text-[#FF7A6E] transition-colors" 
+                    className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 flex items-center justify-center text-[#FF3B31] dark:text-[#FF7A6E] transition-colors" 
                     onClick={goToNextSlide}
                     aria-label="Next slide"
                   >
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10">
                       <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </button>
@@ -256,8 +245,8 @@ const GridContent: React.FC<{
             </div>
           </div>
           
-          {/* Third cell in top row */}
-          <FlippableGridCell index={3} className="border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+          {/* Top-right cell */}
+          <FlippableGridCell index={5} className="col-span-1 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px] sm:h-[450px] lg:h-[300px]">
             <Suspense fallback={
               <div className="h-full w-full flex items-center justify-center">
                 <div className="animate-pulse bg-[#FF3B31]/20 dark:bg-[#FF7A6E]/20 h-full w-full"></div>
@@ -270,16 +259,16 @@ const GridContent: React.FC<{
           </FlippableGridCell>
           
           {/* Third row cell (second column already covered by slider) */}
-          <FlippableGridCell index={6} className="border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+          <FlippableGridCell index={6} className="col-span-1 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
             <div className="h-full">
-              <div className={`${bgColor} p-8 h-full flex items-center`}>
+              <div className={`${bgColor} p-4 sm:p-6 md:p-8 h-full flex items-center`}>
                 <IndustryTerm term={randomTerm} />
               </div>
             </div>
           </FlippableGridCell>
           
           {/* Bottom row */}
-          <FlippableGridCell index={7} className="border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+          <FlippableGridCell index={7} className="col-span-1 border-r-0 sm:border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
             <ContactForm />
             {isRetro && (
               <div className="visitor-counter">
@@ -295,11 +284,11 @@ const GridContent: React.FC<{
             )}
           </FlippableGridCell>
           
-          <FlippableGridCell index={8} className="border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+          <FlippableGridCell index={8} className="col-span-1 border-r-0 sm:border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
             <EmptyBox />
           </FlippableGridCell>
           
-          <FlippableGridCell index={9} className="h-[300px]">
+          <FlippableGridCell index={9} className="col-span-1 h-[300px]">
             <div className="h-full">
               <Testimonial />
             </div>

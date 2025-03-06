@@ -5,7 +5,7 @@ import SocialLinks from "../components/SocialLinks";
 
 const VideoDemo = () => {
   return (
-    <div className="min-h-screen bg-[#F0EBE6] dark:bg-[#16192E]">
+    <div className="min-h-screen bg-[#F5F5F5] dark:bg-[#16192E]">
       <div className="mx-auto p-4 md:p-6 max-w-screen-2xl">
         <Header />
         

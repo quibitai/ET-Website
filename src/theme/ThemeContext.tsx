@@ -41,7 +41,7 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  // Initialize state from localStorage if available
+  // Initialize state from localStorage if available, or default to light mode
   const [colorMode, setColorModeState] = useState<ColorMode>(() => {
     if (typeof window !== 'undefined') {
       return (localStorage.getItem('color-mode') as ColorMode) || 'light';
@@ -49,12 +49,20 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     return 'light';
   });
 
+  // Initialize visual mode from localStorage if available, or default to grayscale mode
   const [visualMode, setVisualModeState] = useState<VisualMode>(() => {
     if (typeof window !== 'undefined') {
-      if (localStorage.getItem('retro-mode') === 'true') return 'retro';
-      if (localStorage.getItem('grayscale-mode') === 'true') return 'grayscale';
+      // Check if we have a stored preference
+      const storedRetro = localStorage.getItem('retro-mode');
+      const storedGrayscale = localStorage.getItem('grayscale-mode');
+      
+      // If we have stored preferences, use them
+      if (storedRetro === 'true') return 'retro';
+      if (storedGrayscale === 'true' || storedGrayscale === null) return 'grayscale';
+      if (storedGrayscale === 'false') return 'standard';
     }
-    return 'standard';
+    // Default to grayscale mode
+    return 'grayscale';
   });
 
   const [resolvedColorMode, setResolvedColorMode] = useState<'light' | 'dark'>(() => {
@@ -134,6 +142,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         document.documentElement.classList.add('grayscale-mode');
       } else if (visualMode === 'retro') {
         document.documentElement.classList.add('retro-mode');
+      }
+      
+      // Ensure localStorage is set for first-time visitors
+      if (localStorage.getItem('grayscale-mode') === null) {
+        localStorage.setItem('grayscale-mode', 'true');
       }
     }
   }, [resolvedColorMode, visualMode]);

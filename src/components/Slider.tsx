@@ -58,8 +58,8 @@ const Slider: React.FC<SliderProps> = ({ slides, hideControls = false, initialSl
     return (
       <>
         {slide.title} <span 
-          className="font-bold bg-brand dark:bg-brand-light text-white px-2 py-1 inline-block"
-          style={titleBoldColor ? { color: titleBoldColor } : {}}
+          className="font-bold bg-brand dark:bg-brand-light text-[#F5F5F5] px-2 py-1 inline-block"
+          style={titleBoldColor ? { backgroundColor: titleBoldColor } : {}}
         >
           {slide.titleBold}
         </span>
@@ -83,7 +83,7 @@ const Slider: React.FC<SliderProps> = ({ slides, hideControls = false, initialSl
   };
 
   return (
-    <div className="bg-[#F0EBE6] dark:bg-[#16192E] p-6 md:p-8 h-full w-full">
+    <div className="bg-[#F5F5F5] dark:bg-[#16192E] p-6 md:p-8 h-full w-full">
       <div className="w-full mx-auto h-full flex flex-col relative">
         {/* Title with bold part */}
         <h2 className="text-brand dark:text-brand-light font-serif text-[28px] xs:text-[32px] sm:text-[38px] md:text-[42px] mb-4 leading-tight text-left">
@@ -106,23 +106,23 @@ const Slider: React.FC<SliderProps> = ({ slides, hideControls = false, initialSl
           <div className="flex justify-center gap-4 py-4">
             <button 
               onClick={handlePrevSlide}
-              className="text-brand dark:text-brand-light hover:opacity-70 transition-opacity duration-300 focus:outline-none focus:ring-2 focus:ring-brand dark:focus:ring-brand-light rounded-md p-2"
+              className="text-brand dark:text-brand-light hover:opacity-70 transition-opacity duration-300 focus:outline-none focus:ring-2 focus:ring-brand dark:focus:ring-brand-light p-2 no-hover-bg"
               disabled={isAnimating}
               aria-label="Previous slide"
               type="button"
             >
-              <svg width="48" height="48" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="transform transition-transform duration-300 hover:scale-110">
+              <svg width="48" height="48" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="transform transition-transform duration-300">
                 <path d="M17 7L10 14L17 21" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
             <button 
               onClick={handleNextSlide}
-              className="text-brand dark:text-brand-light hover:opacity-70 transition-opacity duration-300 focus:outline-none focus:ring-2 focus:ring-brand dark:focus:ring-brand-light rounded-md p-2"
+              className="text-brand dark:text-brand-light hover:opacity-70 transition-opacity duration-300 focus:outline-none focus:ring-2 focus:ring-brand dark:focus:ring-brand-light p-2 no-hover-bg"
               disabled={isAnimating}
               aria-label="Next slide"
               type="button"
             >
-              <svg width="48" height="48" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="transform transition-transform duration-300 hover:scale-110">
+              <svg width="48" height="48" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="transform transition-transform duration-300">
                 <path d="M11 7L18 14L11 21" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>

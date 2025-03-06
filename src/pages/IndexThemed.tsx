@@ -76,7 +76,7 @@ const IndexThemed: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-[#F0EBE6] dark:bg-[#191919] text-black dark:text-white">
+    <div className="w-full min-h-screen bg-[#F5F5F5] dark:bg-[#191919] text-black dark:text-white">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <Header />
@@ -93,7 +93,7 @@ const IndexThemed: React.FC = () => {
             {/* Theme Toggle for easy testing - only shown after delay */}
             {showThemeToggle && (
               <div 
-                className="fixed bottom-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50"
+                className="fixed bottom-4 right-4 bg-[#F5F5F5] dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50"
                 style={{ maxWidth: '300px' }}
               >
                 <div className="flex justify-between items-center mb-2">

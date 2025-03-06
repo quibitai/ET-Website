@@ -93,7 +93,7 @@ export const ContentSlider: React.FC<ContentSliderProps> = ({
             {slide.ctaText && (
               <a
                 href={slide.ctaLink || '#'}
-                className="px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
+                className="px-6 py-3 bg-black text-[#F5F5F5] rounded-md hover:bg-gray-800 transition-colors"
               >
                 {slide.ctaText}
               </a>
@@ -125,7 +125,7 @@ export const ContentSlider: React.FC<ContentSliderProps> = ({
       {slides.length > 1 && (
         <>
           <button
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 flex items-center justify-center z-20 hover:bg-white transition-colors"
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#F5F5F5]/80 flex items-center justify-center z-20 hover:bg-[#F5F5F5] transition-colors"
             onClick={handlePrevSlide}
             aria-label="Previous slide"
           >
@@ -134,7 +134,7 @@ export const ContentSlider: React.FC<ContentSliderProps> = ({
             </svg>
           </button>
           <button
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 flex items-center justify-center z-20 hover:bg-white transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#F5F5F5]/80 flex items-center justify-center z-20 hover:bg-[#F5F5F5] transition-colors"
             onClick={handleNextSlide}
             aria-label="Next slide"
           >

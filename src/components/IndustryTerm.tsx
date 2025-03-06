@@ -98,19 +98,19 @@ const IndustryTerm: React.FC<IndustryTermProps> = ({ term: initialTerm }) => {
   };
   
   return (
-    <div className="text-[#FF3B31] dark:text-[#FFEB94] text-left relative">
+    <div className="text-[#FF3B31] dark:text-[#FF7A6E] text-left relative">
       <div className="flex justify-between items-start mb-2">
         <div className="font-bold text-lg">{displayTerm}</div>
         <button 
           onClick={handleGetNewTerm}
-          className="p-2 text-[#FF3B31] dark:text-[#FFEB94] hover:text-black dark:hover:text-[#FF7A6E] transition-colors duration-300 focus:outline-none"
+          className="p-2 text-[#FF3B31] dark:text-[#FF7A6E] hover:text-black dark:hover:text-[#FF7A6E] transition-colors duration-300 focus:outline-none"
           aria-label="Get new random term"
           disabled={isAnimating}
         >
           <RefreshCw size={16} className={`${isAnimating ? 'animate-spin' : ''}`} />
         </button>
       </div>
-      <div className="text-sm text-[#FF3B31]/80 dark:text-[#FFEB94]/80 whitespace-pre-line">{displayDefinition}</div>
+      <div className="text-sm text-[#FF3B31]/80 dark:text-[#FF7A6E]/80 whitespace-pre-line mt-2">{displayDefinition}</div>
     </div>
   );
 };

@@ -39,7 +39,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = "" }) => {
               onClick={() => setColorMode(mode)}
               className={`px-3 py-1 rounded text-sm ${
                 colorMode === mode
-                  ? "bg-[#FF3B31] dark:bg-[#FF7A6E] text-white"
+                  ? "bg-[#FF3B31] dark:bg-[#FF7A6E] text-[#F5F5F5]"
                   : "bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
               }`}
             >
@@ -64,7 +64,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = "" }) => {
               onClick={() => setVisualMode(mode)}
               className={`px-3 py-1 rounded text-sm ${
                 visualMode === mode
-                  ? "bg-[#FF3B31] dark:bg-[#FF7A6E] text-white"
+                  ? "bg-[#FF3B31] dark:bg-[#FF7A6E] text-[#F5F5F5]"
                   : "bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
               }`}
             >

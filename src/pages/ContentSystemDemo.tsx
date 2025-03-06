@@ -11,7 +11,7 @@ export default function ContentSystemDemo() {
     <ContentProvider>
       <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-1 bg-white">
+        <main className="flex-1 bg-[#F5F5F5]">
           <div className="container mx-auto py-8">
             <div className="max-w-4xl mx-auto">
               <div className="mb-8">

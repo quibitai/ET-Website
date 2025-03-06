@@ -63,15 +63,16 @@
 @layer base {
   * {
     @apply border-border;
+    @apply transition-colors duration-300;
   }
   
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
     color-scheme: light dark;
   }
   
   ::selection {
-    @apply bg-[#FF3B31] text-white;
+    @apply bg-[#FF3B31] text-[#F5F5F5];
   }
 }
 
@@ -323,6 +324,7 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
 
   .grayscale-mode:not(.retro-mode) * {
     @apply transition-all duration-300 ease-in-out;
+    /* Remove the blanket grayscale filter and apply it selectively instead */
   }
 
   .grayscale-mode:not(.retro-mode) h1,
@@ -378,6 +380,26 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
   .grayscale-mode:not(.retro-mode) button:hover {
     @apply bg-gray-700 dark:bg-gray-600;
   }
+
+  /* Exception for buttons that should not have a hover background */
+  .grayscale-mode:not(.retro-mode) button.no-hover-bg:hover {
+    background-color: transparent !important;
+  }
+
+  /* Exceptions for video content to always show in color */
+  .grayscale-mode:not(.retro-mode) iframe,
+  .grayscale-mode:not(.retro-mode) video,
+  .grayscale-mode:not(.retro-mode) .video-container,
+  .grayscale-mode:not(.retro-mode) .video-element {
+    filter: grayscale(0) !important;
+  }
+
+  /* Show thumbnails in color on hover */
+  .grayscale-mode:not(.retro-mode) .show-color-on-hover:hover,
+  .grayscale-mode:not(.retro-mode) .show-color-on-hover:hover * {
+    filter: grayscale(0) !important;
+    transition: filter 0.3s ease;
+  }
 }
 
 @keyframes marquee {
@@ -413,18 +435,15 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
   .rotate-y-0 {
     transform: rotateY(0deg);
   }
+  
   .rotate-y-180 {
     transform: rotateY(180deg);
   }
+  
   .perspective-1000 {
     perspective: 1000px;
   }
   
-  /* Ensure buttons with this class never have a background color on hover */
-  .hover\:\!bg-transparent:hover {
-    background-color: transparent !important;
-  }
-
   /* Flippable grid cells */
   .slider-flip-container[data-flipped="true"] .hidden-flip-cells {
     opacity: 1 !important;
@@ -435,4 +454,123 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
     opacity: 0 !important;
     pointer-events: none !important;
   }
+  
+  /* Border animation for grid cells */
+  .grid-border-animation [class*="border-[#FF3B31]"],
+  .grid-border-animation [class*="border-[#FF7A6E]"] {
+    /* Removed transition and delay properties */
+  }
+  
+  .grid-border-animation[data-borders-visible="true"] [class*="border-[#FF3B31]"],
+  .grid-border-animation[data-borders-visible="true"] [class*="border-[#FF7A6E]"] {
+    border-color: #FF3B31;
+  }
+  
+  .dark .grid-border-animation[data-borders-visible="true"] [class*="border-[#FF7A6E]"] {
+    border-color: #FF7A6E;
+  }
+  
+  /* Varied transition durations for random effect */
+  .duration-600 {
+    transition-duration: 600ms;
+  }
+  
+  .duration-650 {
+    transition-duration: 650ms;
+  }
+  
+  .duration-700 {
+    transition-duration: 700ms;
+  }
+  
+  .duration-750 {
+    transition-duration: 750ms;
+  }
+  
+  .duration-800 {
+    transition-duration: 800ms;
+  }
+}
+
+/* Override background colors in light mode */
+.bg-white {
+  @apply bg-[#F5F5F5];
+}
+
+/* Override text colors in light mode */
+.text-white {
+  @apply text-[#F5F5F5];
+}
+
+/* Override border colors in light mode */
+.border-white {
+  @apply border-[#F5F5F5];
+}
+
+/* Override fill colors in light mode */
+.fill-white {
+  @apply fill-[#F5F5F5];
+}
+
+/* Override stroke colors in light mode */
+.stroke-white {
+  @apply stroke-[#F5F5F5];
+}
+
+/* Update the background color for light mode */
+.bg-\[\#F0EBE6\] {
+  @apply bg-[#F5F5F5];
+}
+
+/* Create a specific list of elements that should be grayscale */
+.grayscale-mode:not(.retro-mode) div:not(.color-always),
+.grayscale-mode:not(.retro-mode) p:not(.color-always),
+.grayscale-mode:not(.retro-mode) span:not(.color-always),
+.grayscale-mode:not(.retro-mode) h1:not(.color-always),
+.grayscale-mode:not(.retro-mode) h2:not(.color-always),
+.grayscale-mode:not(.retro-mode) h3:not(.color-always),
+.grayscale-mode:not(.retro-mode) h4:not(.color-always),
+.grayscale-mode:not(.retro-mode) h5:not(.color-always),
+.grayscale-mode:not(.retro-mode) h6:not(.color-always),
+.grayscale-mode:not(.retro-mode) a:not(.color-always),
+.grayscale-mode:not(.retro-mode) button:not(.color-always),
+.grayscale-mode:not(.retro-mode) img:not(.color-always),
+.grayscale-mode:not(.retro-mode) svg:not(.color-always) {
+  filter: grayscale(1) !important;
+}
+
+/* Specifically EXCLUDE video elements and their containers from grayscale */
+.grayscale-mode:not(.retro-mode) iframe,
+.grayscale-mode:not(.retro-mode) video,
+.grayscale-mode:not(.retro-mode) .video-container,
+.grayscale-mode:not(.retro-mode) .video-element,
+.grayscale-mode:not(.retro-mode) .color-always,
+.grayscale-mode:not(.retro-mode) .color-always * {
+  filter: grayscale(0) !important;
+}
+
+/* Show color on hover for designated elements */
+.grayscale-mode:not(.retro-mode) .show-color-on-hover:hover,
+.grayscale-mode:not(.retro-mode) .show-color-on-hover:hover * {
+  filter: grayscale(0) !important;
+}
+
+/* Other grayscale styles */
+.grayscale-mode:not(.retro-mode) h1,
+.grayscale-mode:not(.retro-mode) h2,
+.grayscale-mode:not(.retro-mode) h3 {
+  @apply text-black dark:text-white;
+}
+
+/* Extra important rules for forcing color display on videos and modals */
+html.grayscale-mode .video-container,
+html.grayscale-mode .video-container *,
+html.grayscale-mode .video-element,
+html.grayscale-mode .video-element *,
+html.grayscale-mode iframe,
+html.grayscale-mode iframe *,
+html.grayscale-mode .color-always,
+html.grayscale-mode .color-always * {
+  filter: none !important;
+  -webkit-filter: none !important;
 }
