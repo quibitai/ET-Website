@@ -208,10 +208,11 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
     background-image: url("data:image/gif;base64,R0lGODlhFAAUAIAAAP///wAAACH5BAEAAAAALAAAAAAUABQAAAIRhI+py+0Po5y02ouz3rz7rxUAOw==");
     min-height: 100vh;
     overflow-x: hidden;
+    font-family: 'VT323', monospace;
+    cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA+klEQVR4nJ3TPUoDQRgG4Ec0ohFBLJRYaGGrsYitKOQUXsEDeAERrLyAjS09gKKNnSBYCMEq2AULDRhJDLK4O7A/M5u8cJn5+N75eGfKNc0CqviEP3RF1wN5LKHpMw7QzwPUYcwrwSJaaJQBaphjtoRgG1fYKANs4yyb/wRwguMywHqS93CXfYiJIL+ZZcDgDcuZqA91F31QRw+3OMwD7CTYYCKo4QEn2MoDTBvvNAz5tAmcoY8d3GBtlGAlWfQwRCdcc41KgIVxRvQKiheYCPLDNFg0or3QfomlwLqRfwO1aEJrIb8ZuBp0vDZ44K0x7r0mM1uTfiXd6O4Xi3c99cFbXwEAAAAASUVORK5CYII="), auto;
   }
 
   .retro-mode * {
-    font-family: 'VT323', monospace;
     @apply transition-all duration-300 ease-in-out;
   }
 
@@ -268,6 +269,9 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
     @apply border-2 border-yellow-300;
     background: linear-gradient(45deg, #000066, #000088);
     box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAABVklEQVR4nI3TMUvDQBQH8D91UFSsa1ECDlm6dXCwKOJUHMRFP4G7q1+ggw5FEAQRHARxEBwclIquhQ7qIMWKSKsI2jb535xJrm0uPDjufbx/7v970SgRQgQp2+I1hOA4jbVXXGlBFuuwB4uQfsPTMATj8mFMNSN4gSHC0IHNpAZrWECIL8jgOI5BHuvS/BQ6OX/QgG14yAKMYFMJyjLE0hZWTIEV/cI+BdVEWNaBpUhBKo+p3o+pQUvt/yMYgQXswTXcwS2cwLYMoFLbh9QgFm8ymIVvuYKyPQTjqnYu1TZhNQm29VWuILm38HkEfUqwiqYymJL7Vc+XDLCPngwwJOsN67CRqfFcnqDJANcy7YDaTZO2NTVbKCjBtWaGVuQAM/rlOezpQapqtvZUjRKsy4HNygEmpHmTBqmSHmRQzZrw13iwHlSS1wJNqcj8I26g+gORfOkH7KkdFgAAAABJRU5ErkJggg=="), pointer;
   }
 
   .retro-mode button:hover {
@@ -288,6 +292,16 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
     bottom: 1rem;
     left: 1rem;
     z-index: 50;
+    font-family: 'VT323', monospace;
+    position: absolute;
+    bottom: -2rem;
+    left: 1rem;
+    color: #ffff00;
+    text-shadow: 1px 1px 2px #000;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
   }
 
   .retro-mode .social-container {
@@ -295,8 +309,8 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
   }
 
   .retro-mode .construction {
-    width: 16px;
     height: 16px;
+    width: 16px;
     image-rendering: pixelated;
   }
 
@@ -316,11 +330,9 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
     bottom: 1rem;
     right: 1rem;
     z-index: 50;
-  }
-
-  .retro-mode button {
-    font-size: 1.2rem;
-    line-height: 1;
+    border-radius: 0;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.5),
+                0 0 20px rgba(255, 255, 0, 0.3);
   }
 
   .retro-mode audio {
