@@ -1,6 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import Header from "../components/Header";
-import Slider from "../components/Slider";
 import ContactForm from "../components/ContactForm";
 import Testimonial from "../components/Testimonial";
 import SocialLinks from "../components/SocialLinks";
@@ -13,6 +12,9 @@ import { useIndustry } from "../contexts/IndustryContext";
 import { FlipProvider, useFlip } from "../contexts/FlipContext";
 import FlippableGridCell from "../components/FlippableGridCell";
 import { TermDefinition } from "../data/industryTerms";
+import { useTheme, getBackgroundColor } from "../theme";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import ContentDisplay from "../components/ContentDisplay";
 
 // Lazy load the VideoSection component as it's heavier with images
 const VideoSection = lazy(() => import("../components/VideoSection"));
@@ -27,25 +29,24 @@ const Index = () => {
   const { currentTerm, getRandomTerm } = useIndustry();
   const [randomTerm, setRandomTerm] = useState(currentTerm);
 
-  const slides = [
+  const contentItems = [
     {
-      title: "Every brand has a story worth telling,",
-      titleBold: "and telling well.",
-      description: "We bring together the brand designers and visual storytellers, the artists and the filmmakers, the illustrators, animators, writers, the editors...throw them into the creative sandbox, and make some magic happen.",
-      titleBoldColor: "#F5F5F5" // Match the background color for "and telling well."
+      title: "Every brand has a story worth telling, and telling well.",
+      content: "We bring together the brand designers and visual storytellers, the artists and the filmmakers, the illustrators, animators, writers, the editors...throw them into the creative sandbox, and make some magic happen.",
+      highlightedText: "and telling well."
     },
     {
-      title: "Better yet, invite everyone ",
-      titleBold: "behind the veil.",
-      description: "Better yet, invite everyone behind the veil. Because creativity isn't just for the dreamers and left-handed eccentrics."
+      title: "Better yet, invite everyone behind the veil.",
+      content: "Better yet, invite everyone behind the veil. Because creativity isn't just for the dreamers and left-handed eccentrics.",
+      highlightedText: "behind the veil."
     },
     {
-      title: "Whoa! You're still here?",
-      titleBold: "Then you should know",
-      description: "Whoa! You're still here? Then you should know, we think stories are also about making connections, not walling off the creative process and excluding the characters from the telling of their own story. We'd be honored to hear your story and help you to tell it to the world."
+      title: "Whoa! You're still here? Then you should know",
+      content: "Whoa! You're still here? Then you should know, we think stories are also about making connections, not walling off the creative process and excluding the characters from the telling of their own story. We'd be honored to hear your story and help you to tell it to the world.",
+      highlightedText: "Then you should know"
     }
   ];
-
+  
   // Handle intro animation completion
   const handleAnimationComplete = () => {
     // Mark animation as complete
@@ -93,8 +94,9 @@ const Index = () => {
     setRandomTerm(getRandomTerm());
   }, []);
 
-  // Get background color based on dark/light mode
-  const bgColor = "bg-[#F5F5F5] dark:bg-[#16192E]";
+  // Get theme colors
+  const { isDark, visualMode } = useTheme();
+  const backgroundColor = getBackgroundColor(isDark, visualMode);
 
   return (
     <>
@@ -103,8 +105,12 @@ const Index = () => {
       )}
       
       <div 
-        className={`min-h-screen transition-colors duration-300 ${bgColor} transition-opacity duration-1500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-        style={{ display: showContent ? 'block' : 'none' }}
+        className="min-h-screen transition-colors duration-300 transition-opacity duration-1500"
+        style={{ 
+          display: showContent ? 'block' : 'none',
+          backgroundColor: backgroundColor,
+          opacity: isLoaded ? 1 : 0 
+        }}
         role="main"
         aria-live="polite"
       >
@@ -114,9 +120,9 @@ const Index = () => {
 
           <FlipProvider>
             <GridContent
-              slides={slides}
+              contentItems={contentItems}
               randomTerm={randomTerm}
-              bgColor={bgColor}
+              bgColor={backgroundColor}
               isRetro={isRetro}
             />
           </FlipProvider>
@@ -134,47 +140,9 @@ const Index = () => {
 };
 
 // GridContent component to handle the grid layout
-const GridContent = ({ slides, randomTerm, bgColor, isRetro }) => {
+const GridContent = ({ contentItems, randomTerm, bgColor, isRetro }) => {
   const { isFlipped, bordersVisible } = useFlip();
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [slideDirection, setSlideDirection] = useState("right");
-  const [isAnimating, setIsAnimating] = useState(false);
-  
-  // Handle slide navigation
-  const goToNextSlide = () => {
-    if (isAnimating) return;
-    setSlideDirection("right");
-    setIsAnimating(true);
-    setTimeout(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-      setIsAnimating(false);
-    }, 500);
-  };
-  
-  const goToPrevSlide = () => {
-    if (isAnimating) return;
-    setSlideDirection("left");
-    setIsAnimating(true);
-    setTimeout(() => {
-      setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-      setIsAnimating(false);
-    }, 500);
-  };
-  
-  // Get transition classes for the description
-  const getDescriptionTransitionClasses = () => {
-    const baseClasses = "transition-transform duration-500 ease-in-out";
-    
-    if (!isAnimating) {
-      return `${baseClasses} transform translate-x-0`;
-    }
-    
-    if (slideDirection === "right") {
-      return `${baseClasses} transform -translate-x-full`;
-    } else {
-      return `${baseClasses} transform translate-x-full`;
-    }
-  };
+  const { visualMode, isDark } = useTheme();
   
   return (
     /* 3x3 Grid with consistent border treatment */
@@ -199,57 +167,29 @@ const GridContent = ({ slides, randomTerm, bgColor, isRetro }) => {
               </FlippableGridCell>
             </div>
             
-            {/* Visible unified slider */}
-            <div className="unified-slider h-full w-full overflow-hidden transition-opacity duration-300 flex items-center justify-center">
-              <div className="h-full w-full flex flex-col p-4 sm:p-8 md:p-12 lg:p-16 relative bg-[#F5F5F5] dark:bg-[#16192E]">
-                <div className="flex flex-col justify-center h-full mx-auto max-w-[95%] sm:max-w-[90%] md:max-w-[80%] pt-4 sm:pt-8 md:pt-16">
-                  {/* Fixed title that doesn't change - exact match with screenshot */}
-                  <h2 className="text-[#FF3B31] dark:text-[#FF7A6E] font-serif text-[28px] xs:text-[32px] sm:text-[36px] md:text-[44px] lg:text-[48px] leading-tight font-normal">
-                    <span className="inline sm:hidden">Every brand has a story worth telling,</span>
-                    <span className="hidden sm:inline">Every brand has a story worth
-                    <br />telling,</span> <span className="font-medium bg-[#FF3B31] dark:bg-[#FF7A6E] text-[#F5F5F5] px-2 sm:px-4 py-1 inline-block sm:inline my-1 sm:my-0">and telling well.</span>
-                  </h2>
-                  
-                  {/* Custom slider for descriptions only with animation */}
-                  <div className="relative w-full flex-grow overflow-hidden mt-4 sm:mt-6 md:mt-10">
-                    <div className={getDescriptionTransitionClasses()}>
-                      <p className="text-[#FF3B31] dark:text-[#FF7A6E] font-mono text-sm sm:text-base md:text-[18px] leading-relaxed">
-                        {slides[currentSlide].description}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Navigation buttons - slightly smaller than before */}
-                <div className="absolute bottom-2 sm:bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex gap-4 sm:gap-8">
-                  <button 
-                    className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 flex items-center justify-center text-[#FF3B31] dark:text-[#FF7A6E] transition-colors" 
-                    onClick={goToPrevSlide}
-                    aria-label="Previous slide"
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10">
-                      <path d="M15 6L9 12L15 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                  <button 
-                    className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 flex items-center justify-center text-[#FF3B31] dark:text-[#FF7A6E] transition-colors" 
-                    onClick={goToNextSlide}
-                    aria-label="Next slide"
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10">
-                      <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
+            {/* Replace the custom slider with ContentDisplay component */}
+            <div 
+              className="w-full h-full flex items-center justify-center"
+              style={{ 
+                backgroundColor: visualMode === 'grayscale' 
+                  ? (isDark ? '#222222' : '#F0F0F0') 
+                  : (isDark ? '#16192E' : '#F5F5F5'),
+                visibility: isFlipped ? 'hidden' : 'visible',
+                position: 'relative',
+                zIndex: isFlipped ? 0 : 10
+              }}
+            >
+              <ContentDisplay
+                items={contentItems}
+                className="w-full h-full"
+              />
             </div>
           </div>
           
           {/* Top-right cell */}
           <FlippableGridCell index={5} className="col-span-1 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px] sm:h-[450px] lg:h-[300px]">
             <Suspense fallback={
-              <div className="h-full w-full flex items-center justify-center">
-                <div className="animate-pulse bg-[#FF3B31]/20 dark:bg-[#FF7A6E]/20 h-full w-full"></div>
+              <div className={visualMode === 'grayscale' ? 'animate-pulse bg-[#333333]/20 dark:bg-[#DDDDDD]/20 h-full w-full' : 'animate-pulse bg-[#FF3B31]/20 dark:bg-[#FF7A6E]/20 h-full w-full'}>
               </div>
             }>
               <div className="h-full w-full">

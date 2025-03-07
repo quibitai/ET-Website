@@ -9,6 +9,10 @@ interface FlippableGridCellProps {
   className?: string;
 }
 
+/**
+ * FlippableGridCell - Handles the 3D flip animation between front and back content
+ * Simplified implementation focusing on reliable interaction
+ */
 const FlippableGridCell: React.FC<FlippableGridCellProps> = ({ 
   children, 
   index,
@@ -47,30 +51,47 @@ const FlippableGridCell: React.FC<FlippableGridCellProps> = ({
   
   return (
     <div className={`relative ${className}`}>
+      {/* Simplified structure with clearer z-index and pointer-events handling */}
       <div 
-        className={`
-          w-full h-full transition-all ${transitionDuration}
-          ${localFlipped ? 'rotate-y-180 opacity-0 pointer-events-none' : 'rotate-y-0 opacity-100'}
-        `}
-        style={{
-          transformStyle: 'preserve-3d',
-          backfaceVisibility: 'hidden',
-        }}
+        className="w-full h-full perspective-1000"
+        style={{ perspective: '1000px' }}
       >
-        {children}
-      </div>
-      
-      <div 
-        className={`
-          absolute inset-0 w-full h-full transition-all ${transitionDuration}
-          ${localFlipped ? 'rotate-y-0 opacity-100' : 'rotate-y-180 opacity-0 pointer-events-none'}
-        `}
-        style={{
-          transformStyle: 'preserve-3d',
-          backfaceVisibility: 'hidden',
-        }}
-      >
-        {renderBackContent()}
+        <div 
+          className={`relative w-full h-full transition-all duration-700`}
+          style={{ 
+            transformStyle: 'preserve-3d',
+            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
+          }}
+        >
+          {/* Front face */}
+          <div 
+            className="absolute inset-0 backface-hidden"
+            style={{ 
+              backfaceVisibility: 'hidden',
+              opacity: isFlipped ? 0 : 1,
+              pointerEvents: isFlipped ? 'none' : 'auto',
+              zIndex: isFlipped ? 0 : 2,
+              transition: 'opacity 300ms ease'
+            }}
+          >
+            {children}
+          </div>
+          
+          {/* Back face */}
+          <div 
+            className="absolute inset-0 backface-hidden"
+            style={{ 
+              backfaceVisibility: 'hidden',
+              transform: 'rotateY(180deg)',
+              opacity: isFlipped ? 1 : 0,
+              pointerEvents: isFlipped ? 'auto' : 'none',
+              zIndex: isFlipped ? 2 : 0,
+              transition: 'opacity 300ms ease'
+            }}
+          >
+            {renderBackContent()}
+          </div>
+        </div>
       </div>
     </div>
   );

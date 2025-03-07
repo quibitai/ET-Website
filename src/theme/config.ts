@@ -2,42 +2,119 @@
  * Theme Configuration
  */
 
-// Base colors
+// Base colors with standard, grayscale and retro variants
 export const COLORS = {
   // Primary brand color
   primary: {
-    light: '#FF3B31',
-    dark: '#FF7A6E',
+    standard: {
+      light: '#FF3B31',
+      dark: '#FF7A6E',
+    },
+    grayscale: {
+      light: '#333333',  // Dark gray in light mode
+      dark: '#DDDDDD',   // Light gray in dark mode
+    },
+    retro: {
+      light: '#7FFF00',
+      dark: '#00FF7F',
+    }
   },
   
   // Background colors
   background: {
-    light: '#F5F5F5',
-    dark: '#16192E',
+    standard: {
+      light: '#F5F5F5',
+      dark: '#16192E',
+    },
+    grayscale: {
+      light: '#F0F0F0',  // Very light gray
+      dark: '#222222',   // Very dark gray
+    },
+    retro: {
+      light: '#0000AA',
+      dark: '#000077',
+    }
   },
   
   // Text colors
   text: {
-    light: '#000000',
-    dark: '#FFFFFF',
+    standard: {
+      light: '#000000',
+      dark: '#FFFFFF',
+    },
+    grayscale: {
+      light: '#333333',  // Dark gray
+      dark: '#DDDDDD',   // Light gray
+    },
+    retro: {
+      light: '#00FF00',
+      dark: '#00FF00',
+    }
   },
   
   // Border colors
   border: {
-    light: '#FF3B31',
-    dark: '#FF7A6E',
-  },
-  
-  // Grid colors for the EmptyBox component
-  grid: {
-    light: {
-      standard: '#FF3B31',
-      dark: 'rgb(230, 230, 230)',
+    standard: {
+      light: '#FF3B31',
+      dark: '#FF7A6E',
     },
-    dark: {
-      standard: '#FFFFFF',
+    grayscale: {
+      light: '#333333',  // Dark gray
+      dark: '#DDDDDD',   // Light gray
+    },
+    retro: {
+      light: '#7FFF00',
+      dark: '#00FF7F',
     }
   },
+  
+  // Grid colors
+  grid: {
+    standard: {
+      light: '#FF3B31',
+      dark: '#FFFFFF',
+    },
+    grayscale: {
+      light: '#333333',  // Dark gray
+      dark: '#DDDDDD',   // Light gray
+    },
+    retro: {
+      light: '#7FFF00',
+      dark: '#00FF7F',
+    }
+  },
+  
+  // Highlight colors (for special elements)
+  highlight: {
+    standard: {
+      light: '#FF3B31',
+      dark: '#FF7A6E',
+    },
+    grayscale: {
+      light: '#333333',  // Dark gray
+      dark: '#DDDDDD',   // Light gray
+    },
+    retro: {
+      light: '#FFFF00',
+      dark: '#FFFF00',
+    }
+  },
+  
+  // Accent colors (for buttons, links, etc)
+  accent: {
+    standard: {
+      light: '#FF3B31',
+      dark: '#FF7A6E',
+    },
+    grayscale: {
+      light: '#333333',  // Dark gray
+      dark: '#DDDDDD',   // Light gray
+    },
+    retro: {
+      light: '#00FFFF',
+      dark: '#00FFFF',
+    }
+  }
 };
 
 // Grid element opacity
@@ -56,7 +133,7 @@ export const GRID_OPACITY = {
 // These classes are essential for each visual mode
 export const MODE_CLASSES = {
   standard: [],
-  grayscale: ['grayscale-mode'],
+  grayscale: ['grayscale-mode-new'], // Update to new class name to avoid conflicts
   retro: ['retro-mode'],
 };
 

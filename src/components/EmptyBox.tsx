@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTheme } from "../theme";
+import { useTheme, getBackgroundColor, getPrimaryColor, getTextColor } from "../theme";
 import { useFlip } from "../contexts/FlipContext";
 
 /**
@@ -7,20 +7,27 @@ import { useFlip } from "../contexts/FlipContext";
  * 
  * Displays "WORK" text with hover effect.
  * Uses the unified theme system to maintain consistent appearances
- * across light and dark modes.
+ * across all color and visual modes.
  */
 const EmptyBox: React.FC = () => {
-  const { isDark } = useTheme();
+  const { isDark, visualMode } = useTheme();
   const { toggleFlip } = useFlip();
   const [isHovered, setIsHovered] = useState(false);
 
+  // Get appropriate colors from the theme system based on current modes
+  const backgroundColor = getBackgroundColor(isDark, visualMode);
+  const textColor = getPrimaryColor(isDark, visualMode);
+  
+  // Define hover states
+  const hoverBackgroundColor = textColor; // Background becomes the text color on hover
+  const hoverTextColor = backgroundColor; // Text becomes the background color on hover
+
   return (
     <div 
-      className={`relative h-full w-full overflow-hidden transition-colors duration-300 flex items-center justify-center ${
-        isHovered 
-          ? 'bg-[#FF3B31] dark:bg-[#FF7A6E]' 
-          : 'bg-[#F5F5F5] dark:bg-[#16192E]'
-      }`}
+      className="relative h-full w-full overflow-hidden transition-colors duration-300 flex items-center justify-center"
+      style={{ 
+        backgroundColor: isHovered ? hoverBackgroundColor : backgroundColor 
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -30,11 +37,10 @@ const EmptyBox: React.FC = () => {
         aria-label="Flip grid to show video thumbnails"
       >
         <div 
-          className={`text-7xl md:text-8xl font-black tracking-wider select-none transition-all duration-300 ${
-            isHovered 
-              ? 'text-[#F5F5F5] dark:text-[#16192E]' 
-              : 'text-[#FF3B31] dark:text-[#FF7A6E]'
-          }`}
+          className="text-7xl md:text-8xl font-black tracking-wider select-none transition-all duration-300"
+          style={{ 
+            color: isHovered ? hoverTextColor : textColor 
+          }}
         >
           WORK
         </div>

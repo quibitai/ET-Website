@@ -16,4 +16,7 @@ export * from './utils';
 export * from './config';
 
 // Export components
-export { default as BorderFix } from './BorderFix'; 
+export { default as BorderFix } from './BorderFix';
+
+// Export constants
+export * from './constants'; 

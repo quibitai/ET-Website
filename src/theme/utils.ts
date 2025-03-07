@@ -2,43 +2,39 @@ import { VisualMode } from './types';
 import { COLORS, GRID_OPACITY } from './config';
 
 /**
+ * Get the appropriate color for a specific color type, visual mode, and dark/light variant
+ * @param colorType - The type of color to get (primary, border, etc.)
+ * @param visualMode - Current visual mode (standard, grayscale, retro)
+ * @param isDark - Whether dark mode is active
+ */
+export const getThemeColor = (
+  colorType: keyof typeof COLORS, 
+  visualMode: VisualMode, 
+  isDark: boolean
+): string => {
+  // Use the correct visual mode, defaulting to standard if the requested mode isn't available
+  const mode = COLORS[colorType][visualMode] ? visualMode : 'standard';
+  
+  // Return the appropriate color based on dark/light mode
+  return COLORS[colorType][mode][isDark ? 'dark' : 'light'];
+};
+
+/**
  * Get the appropriate border color based on theme state
  * @param isDark - Whether dark mode is active
  * @param visualMode - Current visual mode
  */
 export const getBorderColor = (isDark: boolean, visualMode: VisualMode): string => {
-  if (visualMode === 'retro') {
-    return 'border-black';
-  }
-  
-  if (visualMode === 'grayscale') {
-    return isDark ? 'border-white' : 'border-black';
-  }
-  
-  // Standard mode
-  return isDark 
-    ? `border-[${COLORS.border.dark}]` 
-    : `border-[${COLORS.border.light}]`;
+  return getThemeColor('border', visualMode, isDark);
 };
 
 /**
- * Get the grid color for EmptyBox component
+ * Get the grid color for components
  * @param isDark - Whether dark mode is active
  * @param visualMode - Current visual mode
  */
 export const getGridColor = (isDark: boolean, visualMode: VisualMode): string => {
-  if (visualMode === 'retro') {
-    return 'black';
-  }
-  
-  if (visualMode === 'grayscale') {
-    return isDark ? 'white' : 'black';
-  }
-  
-  // Standard mode with dark/light variants
-  return isDark 
-    ? COLORS.grid.dark.standard 
-    : COLORS.grid.light.standard;
+  return getThemeColor('grid', visualMode, isDark);
 };
 
 /**
@@ -69,22 +65,48 @@ export const getGridOpacity = (isDark: boolean, visualMode: VisualMode): number 
  * @param visualMode - Current visual mode
  */
 export const getBackgroundColor = (isDark: boolean, visualMode: VisualMode): string => {
-  if (visualMode === 'retro') {
-    return '#ffffeb';
-  }
-  
-  if (visualMode === 'grayscale') {
-    return isDark ? '#1e1e1e' : '#f5f5f5';
-  }
-  
-  // Standard mode
-  return isDark 
-    ? COLORS.background.dark
-    : COLORS.background.light;
+  return getThemeColor('background', visualMode, isDark);
+};
+
+/**
+ * Get the text color for components
+ * @param isDark - Whether dark mode is active
+ * @param visualMode - Current visual mode
+ */
+export const getTextColor = (isDark: boolean, visualMode: VisualMode): string => {
+  return getThemeColor('text', visualMode, isDark);
+};
+
+/**
+ * Get the primary color for components
+ * @param isDark - Whether dark mode is active
+ * @param visualMode - Current visual mode
+ */
+export const getPrimaryColor = (isDark: boolean, visualMode: VisualMode): string => {
+  return getThemeColor('primary', visualMode, isDark);
+};
+
+/**
+ * Get the accent color for components
+ * @param isDark - Whether dark mode is active
+ * @param visualMode - Current visual mode
+ */
+export const getAccentColor = (isDark: boolean, visualMode: VisualMode): string => {
+  return getThemeColor('accent', visualMode, isDark);
+};
+
+/**
+ * Get the highlight color for components
+ * @param isDark - Whether dark mode is active
+ * @param visualMode - Current visual mode
+ */
+export const getHighlightColor = (isDark: boolean, visualMode: VisualMode): string => {
+  return getThemeColor('highlight', visualMode, isDark);
 };
 
 /**
  * Generate tailwind classes for a themed element
+ * This function now adapts to the current visual mode automatically
  * @param params - Configuration parameters
  */
 export const themedClasses = (params: {

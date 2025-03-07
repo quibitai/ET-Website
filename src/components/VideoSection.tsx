@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from "react";
 import { Clapperboard, X } from "lucide-react";
 import { useIndustry } from "../contexts/IndustryContext";
+import { useTheme } from "../theme";
 import ReactDOM from "react-dom";
 
 // Array of image paths
@@ -100,7 +101,9 @@ const VideoSection: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const { getRandomTerm } = useIndustry();
+  const { visualMode } = useTheme();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -175,6 +178,8 @@ const VideoSection: React.FC = () => {
       <div 
         className="relative w-full h-full cursor-pointer group"
         onClick={openVideoModal}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         {images.map((src, index) => (
           <img
@@ -183,7 +188,7 @@ const VideoSection: React.FC = () => {
             alt={`Production process ${index + 1}`}
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
               index === currentImageIndex ? 'opacity-100' : 'opacity-0'
-            }`}
+            } ${isHovered ? 'color-always' : ''}`}
           />
         ))}
         
@@ -208,8 +213,11 @@ const VideoSection: React.FC = () => {
         {/* Play video overlay */}
         <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
           <div className="flex flex-col items-center justify-center">
-            <div className="bg-[#F5F5F5] dark:bg-gray-900 rounded-full p-2 transform transition-transform group-hover:scale-110">
-              <Clapperboard size={24} className="text-[#FF3B31] dark:text-[#FF7A6E]" />
+            <div className={`bg-[#F5F5F5] dark:bg-gray-900 rounded-full p-2 transform transition-transform group-hover:scale-110 ${isHovered ? 'color-always' : ''}`}>
+              <Clapperboard size={24} className={visualMode === 'grayscale' && !isHovered
+                ? "text-[#333333] dark:text-[#DDDDDD]"
+                : "text-[#FF3B31] dark:text-[#FF7A6E]"
+              } />
             </div>
             <p className="text-[#F5F5F5] mt-2 text-xs md:text-sm font-medium">play 2025 reel</p>
           </div>

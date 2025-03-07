@@ -6,6 +6,7 @@ import IndexThemed from "./pages/IndexThemed";
 import NotFound from "./pages/NotFound";
 import VideoDemo from "./pages/VideoDemo";
 import ContentSystemDemo from "./pages/ContentSystemDemo";
+import ContentDisplayDemo from "./pages/ContentDisplayDemo";
 import { ThemeProvider, BorderFix } from "./theme";
 import { RetroProvider } from "./contexts/RetroContext";
 import { IndustryProvider } from "./contexts/IndustryContext";
@@ -35,6 +36,7 @@ const App = () => (
                     <Route path="/themed" element={<IndexThemed />} />
                     <Route path="/video-demo" element={<VideoDemo />} />
                     <Route path="/content-demo" element={<ContentSystemDemo />} />
+                    <Route path="/content-display" element={<ContentDisplayDemo />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </div>

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { ColorMode, VisualMode, ThemeContextType } from './types';
+import { MODE_CLASSES } from './config';
 
 // Create the theme context
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -52,17 +53,17 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   // Initialize visual mode from localStorage if available, or default to grayscale mode
   const [visualMode, setVisualModeState] = useState<VisualMode>(() => {
     if (typeof window !== 'undefined') {
-      // Check if we have a stored preference
+      // Check if we have a stored preference - note we now use a new class name to avoid conflicts
       const storedRetro = localStorage.getItem('retro-mode');
-      const storedGrayscale = localStorage.getItem('grayscale-mode');
+      const storedGrayscale = localStorage.getItem('grayscale-mode-new');
       
       // If we have stored preferences, use them
       if (storedRetro === 'true') return 'retro';
-      if (storedGrayscale === 'true' || storedGrayscale === null) return 'grayscale';
       if (storedGrayscale === 'false') return 'standard';
+      if (storedGrayscale === 'true') return 'grayscale';
     }
-    // Default to grayscale mode
-    return 'grayscale';
+    // Default to standard mode - this can be changed if grayscale should be default
+    return 'standard';
   });
 
   const [resolvedColorMode, setResolvedColorMode] = useState<'light' | 'dark'>(() => {
@@ -87,8 +88,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const setVisualMode = useCallback((mode: VisualMode) => {
     setVisualModeState(mode);
 
-    // Update localStorage for compatibility
+    // Update localStorage
     localStorage.setItem('retro-mode', (mode === 'retro').toString());
+    localStorage.setItem('grayscale-mode-new', (mode === 'grayscale').toString());
+    
+    // For backward compatibility
     localStorage.setItem('grayscale-mode', (mode === 'grayscale').toString());
   }, []);
 
@@ -133,20 +137,16 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     if (typeof document !== 'undefined') {
       // Clear previous classes
       document.documentElement.classList.remove('light', 'dark');
-      document.documentElement.classList.remove('grayscale-mode', 'retro-mode');
+      document.documentElement.classList.remove('grayscale-mode', 'grayscale-mode-new', 'retro-mode');
 
       // Add appropriate classes
       document.documentElement.classList.add(resolvedColorMode);
 
-      if (visualMode === 'grayscale') {
-        document.documentElement.classList.add('grayscale-mode');
-      } else if (visualMode === 'retro') {
-        document.documentElement.classList.add('retro-mode');
-      }
-      
-      // Ensure localStorage is set for first-time visitors
-      if (localStorage.getItem('grayscale-mode') === null) {
-        localStorage.setItem('grayscale-mode', 'true');
+      // Add the appropriate visual mode classes
+      if (MODE_CLASSES[visualMode]) {
+        MODE_CLASSES[visualMode].forEach(className => {
+          document.documentElement.classList.add(className);
+        });
       }
     }
   }, [resolvedColorMode, visualMode]);

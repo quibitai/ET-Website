@@ -1,49 +1,62 @@
 import React, { useState } from "react";
-import { useTheme } from "../theme";
+import { useTheme, getBackgroundColor, getPrimaryColor } from "../theme";
 import { useFlip } from "../contexts/FlipContext";
 
 /**
- * HomeBox component
- * 
- * Displays "HOME" text with hover effect.
- * Uses the unified theme system to maintain consistent appearances
- * across light and dark modes.
+ * HomeBox component - Displays "HOME" text with hover effect
+ * Matched to the styling of the WORK box for consistency
  */
 const HomeBox: React.FC = () => {
-  const { isDark } = useTheme();
+  const { isDark, visualMode } = useTheme();
   const { setFlipped } = useFlip();
   const [isHovered, setIsHovered] = useState(false);
 
-  const handleHomeClick = () => {
-    // Flip back to the main view
+  // Get colors from theme
+  const backgroundColor = getBackgroundColor(isDark, visualMode);
+  const textColor = getPrimaryColor(isDark, visualMode);
+  
+  // Define hover states
+  const hoverBackgroundColor = textColor;
+  const hoverTextColor = backgroundColor;
+
+  // Direct click handler with immediate action
+  function handleClick(e: React.MouseEvent) {
+    // Prevent any event bubbling
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Log the action for debugging
+    console.log("HOME button clicked");
+    
+    // Directly update flip state
     setFlipped(false);
-  };
+  }
 
   return (
     <div 
-      className={`relative h-full w-full overflow-hidden transition-colors duration-300 flex items-center justify-center ${
-        isHovered 
-          ? 'bg-[#FF3B31] dark:bg-[#FF7A6E]' 
-          : 'bg-[#F5F5F5] dark:bg-[#16192E]'
-      }`}
+      className="relative h-full w-full overflow-hidden transition-colors duration-300 flex items-center justify-center"
+      style={{
+        backgroundColor: isHovered ? hoverBackgroundColor : backgroundColor,
+        cursor: 'pointer',
+        zIndex: 50
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      aria-label="Return to main view"
     >
-      <button 
-        onClick={handleHomeClick}
-        className="bg-transparent border-0 p-0 cursor-pointer outline-none focus:outline-none w-full h-full flex items-center justify-center"
-        aria-label="Flip grid to show main content"
+      {/* Use the exact same styling as the WORK text */}
+      <div 
+        className="text-7xl md:text-8xl font-black tracking-wider select-none transition-all duration-300"
+        style={{ 
+          color: isHovered ? hoverTextColor : textColor,
+          pointerEvents: 'none' // Let the parent handle clicks
+        }}
       >
-        <div 
-          className={`text-7xl md:text-8xl font-black tracking-wider select-none transition-all duration-300 ${
-            isHovered 
-              ? 'text-[#F5F5F5] dark:text-[#16192E]' 
-              : 'text-[#FF3B31] dark:text-[#FF7A6E]'
-          }`}
-        >
-          HOME
-        </div>
-      </button>
+        HOME
+      </div>
     </div>
   );
 };

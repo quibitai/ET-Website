@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { TermDefinition, getRandomTerm } from "../data/industryTerms";
 import { RefreshCw } from "lucide-react";
+import { useIndustry } from "../contexts/IndustryContext";
+import { useTheme } from "../theme";
 
 interface IndustryTermProps {
   term: TermDefinition;
@@ -11,6 +13,7 @@ const IndustryTerm: React.FC<IndustryTermProps> = ({ term: initialTerm }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [displayTerm, setDisplayTerm] = useState(initialTerm.term);
   const [displayDefinition, setDisplayDefinition] = useState(initialTerm.definition);
+  const { visualMode } = useTheme();
   
   // Characters to use for scrambling effect
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
@@ -98,19 +101,30 @@ const IndustryTerm: React.FC<IndustryTermProps> = ({ term: initialTerm }) => {
   };
   
   return (
-    <div className="text-[#FF3B31] dark:text-[#FF7A6E] text-left relative">
+    <div className={visualMode === 'grayscale' 
+      ? "text-[#333333] dark:text-[#DDDDDD] text-left relative"
+      : "text-[#FF3B31] dark:text-[#FF7A6E] text-left relative"
+    }>
       <div className="flex justify-between items-start mb-2">
         <div className="font-bold text-lg">{displayTerm}</div>
         <button 
           onClick={handleGetNewTerm}
-          className="p-2 text-[#FF3B31] dark:text-[#FF7A6E] hover:text-black dark:hover:text-[#FF7A6E] transition-colors duration-300 focus:outline-none"
+          className={visualMode === 'grayscale'
+            ? "p-2 text-[#333333] dark:text-[#DDDDDD] hover:text-black dark:hover:text-white transition-colors duration-300 focus:outline-none"
+            : "p-2 text-[#FF3B31] dark:text-[#FF7A6E] hover:text-black dark:hover:text-[#FF7A6E] transition-colors duration-300 focus:outline-none"
+          }
           aria-label="Get new random term"
           disabled={isAnimating}
         >
           <RefreshCw size={16} className={`${isAnimating ? 'animate-spin' : ''}`} />
         </button>
       </div>
-      <div className="text-sm text-[#FF3B31]/80 dark:text-[#FF7A6E]/80 whitespace-pre-line mt-2">{displayDefinition}</div>
+      <div className={visualMode === 'grayscale'
+        ? "text-sm text-[#333333]/80 dark:text-[#DDDDDD]/80 whitespace-pre-line mt-2"
+        : "text-sm text-[#FF3B31]/80 dark:text-[#FF7A6E]/80 whitespace-pre-line mt-2"
+      }>
+        {displayDefinition}
+      </div>
     </div>
   );
 };

@@ -1,0 +1,328 @@
+/**
+ * Content Display Component Styles
+ * Styled to match the Echo Tango design with static title and sliding content
+ */
+
+.content-display {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: #F5F5F5;
+  max-width: 100%;
+  transition: opacity 0.3s ease;
+  z-index: 5; /* Ensure proper stacking context */
+}
+
+/* When parent container is hidden, ensure transitions look smooth */
+:where([style*="visibility:hidden"]) .content-display,
+:where([style*="visibility: hidden"]) .content-display {
+  opacity: 0;
+}
+
+.content-display-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 60px 80px 40px; /* Increased top padding to move content down */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Change back to flex-start but with more top padding */
+  align-items: flex-start;
+  flex-grow: 1;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden; /* Ensure content slides don't overflow */
+}
+
+/* Title container with fixed height to prevent movement */
+.content-display-title-container {
+  width: 100%;
+  position: relative;
+  margin-bottom: 70px; /* Increase space between title and content */
+  /* Set a fixed height to prevent layout shifts */
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Align title to bottom of its container */
+  padding-top: 20px; /* Add some space at the top */
+}
+
+.content-display-content-wrapper {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  transition: transform 0.5s ease, opacity 0.3s ease;
+  /* Ensure this container has its own space and doesn't affect the title */
+  flex-grow: 1;
+  overflow: hidden;
+  display: flex; /* Add flex display */
+  flex-direction: column; /* Stack content vertically */
+  justify-content: flex-start; /* Align content at the top of its container */
+}
+
+/* Slide animation classes */
+.content-display-content-wrapper.slide-next {
+  animation: slideOutLeft 0.5s forwards;
+}
+
+.content-display-content-wrapper.slide-prev {
+  animation: slideOutRight 0.5s forwards;
+}
+
+.content-display-content-wrapper.slide-in-left {
+  animation: slideInLeft 0.5s forwards;
+}
+
+.content-display-content-wrapper.slide-in-right {
+  animation: slideInRight 0.5s forwards;
+}
+
+@keyframes slideOutLeft {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutRight {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Bottom navigation container */
+.content-display-nav {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 3rem;
+  z-index: 10;
+  width: auto;
+}
+
+/* Navigation arrow styles */
+.content-display-arrow {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #FF3B31;
+  font-size: 36px;
+  font-weight: normal;
+}
+
+.content-display-arrow:hover {
+  opacity: 0.8;
+}
+
+.content-display-arrow:focus {
+  outline: none;
+}
+
+/* Content formatting */
+.content-display-title {
+  font-family: 'Freight Display Pro', serif;
+  font-size: 58px;
+  line-height: 1.2;
+  color: #FF3B31;
+  margin-bottom: 0;
+  font-weight: normal;
+  width: 100%;
+  position: relative; /* Keep the title fixed */
+  z-index: 5; /* Ensure title stays on top */
+}
+
+.content-display-content {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 20px;
+  line-height: 1.6;
+  color: #FF3B31;
+  width: 100%;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.content-display-highlight {
+  font-weight: normal;
+  background-color: #FF3B31;
+  color: #F5F5F5;
+  padding: 4px 10px;
+  display: inline-block;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Media queries for responsive sizes */
+@media (max-width: 768px) {
+  .content-display-inner {
+    padding: 50px 60px 30px; /* Increase top padding on mobile */
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .content-display-title-container {
+    margin-bottom: 50px; /* Increase margin on mobile */
+    min-height: 100px; /* Smaller fixed height on mobile */
+    justify-content: flex-end; /* Align title to bottom on mobile too */
+    padding-top: 15px; /* Less top padding on mobile */
+  }
+  
+  .content-display-title {
+    font-size: 32px;
+    width: 100%;
+  }
+  
+  .content-display-content {
+    font-size: 18px;
+    width: 100%;
+  }
+  
+  .content-display-nav {
+    bottom: 1.5rem;
+    gap: 2rem;
+  }
+  
+  .content-display-arrow {
+    font-size: 30px;
+  }
+}
+
+/* Dark mode overrides */
+.dark .content-display {
+  background-color: #16192E;
+}
+
+.dark .content-display-arrow {
+  color: #FF7A6E;
+}
+
+.dark .content-display-title,
+.dark .content-display-content {
+  color: #FF7A6E;
+}
+
+.dark .content-display-highlight {
+  background-color: #FF7A6E;
+  color: #16192E;
+}
+
+/* Grayscale mode overrides - Light */
+.grayscale-mode-new:not(.dark) .content-display,
+.grayscale-mode:not(.dark) .content-display {
+  background-color: #F0F0F0;
+}
+
+.grayscale-mode-new:not(.dark) .content-display-arrow,
+.grayscale-mode:not(.dark) .content-display-arrow {
+  color: #333333;
+}
+
+.grayscale-mode-new:not(.dark) .content-display-title,
+.grayscale-mode-new:not(.dark) .content-display-content,
+.grayscale-mode:not(.dark) .content-display-title,
+.grayscale-mode:not(.dark) .content-display-content {
+  color: #333333;
+}
+
+.grayscale-mode-new:not(.dark) .content-display-highlight,
+.grayscale-mode:not(.dark) .content-display-highlight {
+  background-color: #333333;
+  color: #F0F0F0;
+}
+
+/* Grayscale mode overrides - Dark */
+.grayscale-mode-new.dark .content-display,
+.grayscale-mode.dark .content-display {
+  background-color: #222222;
+}
+
+.grayscale-mode-new.dark .content-display-arrow,
+.grayscale-mode.dark .content-display-arrow {
+  color: #DDDDDD;
+}
+
+.grayscale-mode-new.dark .content-display-title,
+.grayscale-mode-new.dark .content-display-content,
+.grayscale-mode.dark .content-display-title,
+.grayscale-mode.dark .content-display-content {
+  color: #DDDDDD;
+}
+
+.grayscale-mode-new.dark .content-display-highlight,
+.grayscale-mode.dark .content-display-highlight {
+  background-color: #DDDDDD;
+  color: #222222;
+}
+
+/* Retro mode overrides */
+.retro-mode .content-display {
+  background-color: #000066;
+  background-image: url("data:image/gif;base64,R0lGODlhFAAUAIAAAP///wAAACH5BAEAAAAALAAAAAAUABQAAAIRhI+py+0Po5y02ouz3rz7rxUAOw==");
+}
+
+.retro-mode .content-display-arrow {
+  color: #ffff00;
+}
+
+.retro-mode .content-display-title {
+  color: #ffff00;
+  text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+  animation: rainbow 6s linear infinite;
+}
+
+.retro-mode .content-display-content {
+  color: #ffff00;
+  font-family: 'VT323', monospace;
+}
+
+.retro-mode .content-display-highlight {
+  background-color: #ffff00;
+  color: #000066;
+  text-shadow: none;
+  box-shadow: 2px 2px 0 #000;
+  animation: none;
+} 

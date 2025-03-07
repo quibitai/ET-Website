@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import './styles/content-display.css';
 
 @tailwind base;
 @tailwind components;
@@ -35,6 +35,16 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
+    --rotate-0: rotateY(0deg);
+    --rotate-180: rotateY(180deg);
+    --translate-0: translateX(0);
+    --translate-100: translateX(100%);
+    --translate-neg-100: translateX(-100%);
+    --rotate-y-0: rotateY(0deg);
+    --rotate-y-180: rotateY(180deg);
+    --translate-x-0: translateX(0);
+    --translate-x-full: translateX(100%);
+    --translate-x-neg-full: translateX(-100%);
   }
 
   .dark {
@@ -319,12 +329,12 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
 
   /* Grayscale mode styles */
   .grayscale-mode:not(.retro-mode) {
-    filter: grayscale(100%);
+    /* Remove this filter: grayscale rule */
+    /* filter: grayscale(100%); */
   }
 
   .grayscale-mode:not(.retro-mode) * {
-    @apply transition-all duration-300 ease-in-out;
-    /* Remove the blanket grayscale filter and apply it selectively instead */
+    /* No grayscale filter needed */
   }
 
   .grayscale-mode:not(.retro-mode) h1,
@@ -390,15 +400,18 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
   .grayscale-mode:not(.retro-mode) iframe,
   .grayscale-mode:not(.retro-mode) video,
   .grayscale-mode:not(.retro-mode) .video-container,
-  .grayscale-mode:not(.retro-mode) .video-element {
-    filter: grayscale(0) !important;
+  .grayscale-mode:not(.retro-mode) .video-element,
+  .grayscale-mode:not(.retro-mode) .color-always,
+  .grayscale-mode:not(.retro-mode) .color-always * {
+    /* Remove this grayscale filter exception */
+    /* filter: grayscale(0) !important; */
   }
 
   /* Show thumbnails in color on hover */
   .grayscale-mode:not(.retro-mode) .show-color-on-hover:hover,
   .grayscale-mode:not(.retro-mode) .show-color-on-hover:hover * {
-    filter: grayscale(0) !important;
-    transition: filter 0.3s ease;
+    /* Remove this grayscale filter exception */
+    /* filter: grayscale(0) !important; */
   }
 }
 
@@ -433,11 +446,13 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
 /* Custom 3D Flip Utilities */
 @layer utilities {
   .rotate-y-0 {
-    transform: rotateY(0deg);
+    transform: var(--rotate-y-0) !important;
+    backface-visibility: hidden;
   }
   
   .rotate-y-180 {
-    transform: rotateY(180deg);
+    transform: var(--rotate-y-180) !important;
+    backface-visibility: hidden;
   }
   
   .perspective-1000 {
@@ -536,7 +551,56 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
 .grayscale-mode:not(.retro-mode) button:not(.color-always),
 .grayscale-mode:not(.retro-mode) img:not(.color-always),
 .grayscale-mode:not(.retro-mode) svg:not(.color-always) {
-  filter: grayscale(1) !important;
+  /* All filtering is done through theme-based color hardcoding now */
+}
+
+/* Make sure transitions and transforms work in grayscale mode - no longer needed with root approach */
+.grayscale-mode:not(.retro-mode) .preserve-transitions {
+  /* Remove these filter rules */
+  /* filter: grayscale(1) !important; */
+  /* animation: inherit !important; */
+}
+
+/* Ensure flip animations work in grayscale mode - no longer needed with root approach */
+.grayscale-mode:not(.retro-mode) .flip-animation {
+  /* Remove these filter rules */
+  /* filter: grayscale(1) !important; */
+  /* transition: all !important; */
+  /* transform-style: preserve-3d !important; */
+  /* backfaceVisibility: hidden !important; */
+}
+
+/* Ensure slide transitions work in grayscale mode - no longer needed with root approach */
+.grayscale-mode:not(.retro-mode) .slide-transition {
+  /* Remove these filter rules */
+  /* filter: grayscale(1) !important; */
+  /* transition: all 0.5s ease-in-out !important; */
+}
+
+/* Specific overrides for rotate styles in grayscale mode - no longer needed with root approach */
+.grayscale-mode:not(.retro-mode) .rotate-y-0 {
+  /* Remove these filter rules */
+  /* filter: grayscale(1) !important; */
+}
+
+.grayscale-mode:not(.retro-mode) .rotate-y-180 {
+  /* Remove these filter rules */
+  /* filter: grayscale(1) !important; */
+}
+
+.grayscale-mode:not(.retro-mode) .translate-x-0 {
+  /* Remove these filter rules */
+  /* filter: grayscale(1) !important; */
+}
+
+.grayscale-mode:not(.retro-mode) .translate-x-full {
+  /* Remove these filter rules */
+  /* filter: grayscale(1) !important; */
+}
+
+.grayscale-mode:not(.retro-mode) .-translate-x-full {
+  /* Remove these filter rules */
+  /* filter: grayscale(1) !important; */
 }
 
 /* Specifically EXCLUDE video elements and their containers from grayscale */
@@ -546,13 +610,15 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
 .grayscale-mode:not(.retro-mode) .video-element,
 .grayscale-mode:not(.retro-mode) .color-always,
 .grayscale-mode:not(.retro-mode) .color-always * {
-  filter: grayscale(0) !important;
+  /* Remove this grayscale filter exception */
+  /* filter: grayscale(0) !important; */
 }
 
 /* Show color on hover for designated elements */
 .grayscale-mode:not(.retro-mode) .show-color-on-hover:hover,
 .grayscale-mode:not(.retro-mode) .show-color-on-hover:hover * {
-  filter: grayscale(0) !important;
+  /* Remove this grayscale filter exception */
+  /* filter: grayscale(0) !important; */
 }
 
 /* Other grayscale styles */
@@ -571,6 +637,188 @@ html.grayscale-mode iframe,
 html.grayscale-mode iframe *,
 html.grayscale-mode .color-always,
 html.grayscale-mode .color-always * {
+  /* Remove these filter rules */
+  /* filter: none !important; */
+  /* -webkit-filter: none !important; */
+}
+
+/* Remove old grayscale filter-based approach */
+.grayscale-mode-new {
+  @apply transition-colors duration-300 ease-in-out;
+}
+
+/* Remove all the filter-based grayscale mode styles that we're now handling through the theme system */
+.grayscale-mode-new * {
+  @apply transition-colors duration-300 ease-in-out;
+}
+
+/* Elements that will always display in color regardless of grayscale mode */
+.always-color {
+  /* No filters or special handling needed in our new approach */
+}
+
+/* Extra important rules for forcing color display on videos and modals - no longer needed */
+html.grayscale-mode .video-container,
+html.grayscale-mode .video-container *,
+html.grayscale-mode .video-element,
+html.grayscale-mode .video-element *,
+html.grayscale-mode iframe,
+html.grayscale-mode iframe *,
+html.grayscale-mode .color-always,
+html.grayscale-mode .color-always * {
+  /* No filter needed, as we're no longer using filters for grayscale */
   filter: none !important;
-  -webkit-filter: none !important;
+}
+
+/* Root-level grayscale approach - more compatible with transitions */
+html.grayscale-mode:not(.retro-mode) {
+  /* Remove this root-level filter */
+  /* filter: grayscale(1); */
+}
+
+/* Special elements that should remain in color */
+html.grayscale-mode:not(.retro-mode) .color-always,
+html.grayscale-mode:not(.retro-mode) .color-always *,
+html.grayscale-mode:not(.retro-mode) iframe,
+html.grayscale-mode:not(.retro-mode) video,
+html.grayscale-mode:not(.retro-mode) .video-container,
+html.grayscale-mode:not(.retro-mode) .video-element {
+  /* Remove this filter exception */
+  /* filter: grayscale(0); */
+}
+
+/* Show color on hover */
+html.grayscale-mode:not(.retro-mode) .show-color-on-hover:hover,
+html.grayscale-mode:not(.retro-mode) .show-color-on-hover:hover * {
+  /* Remove this filter exception */
+  /* filter: grayscale(0); */
+}
+
+/* Remove individual element filters */
+.grayscale-mode:not(.retro-mode) div:not(.color-always),
+.grayscale-mode:not(.retro-mode) p:not(.color-always),
+.grayscale-mode:not(.retro-mode) span:not(.color-always),
+.grayscale-mode:not(.retro-mode) h1:not(.color-always),
+.grayscale-mode:not(.retro-mode) h2:not(.color-always),
+.grayscale-mode:not(.retro-mode) h3:not(.color-always),
+.grayscale-mode:not(.retro-mode) h4:not(.color-always),
+.grayscale-mode:not(.retro-mode) h5:not(.color-always),
+.grayscale-mode:not(.retro-mode) h6:not(.color-always),
+.grayscale-mode:not(.retro-mode) a:not(.color-always),
+.grayscale-mode:not(.retro-mode) button:not(.color-always),
+.grayscale-mode:not(.retro-mode) img:not(.color-always),
+.grayscale-mode:not(.retro-mode) svg:not(.color-always) {
+  /* No filter needed anymore as it's applied at the html level */
+  filter: none !important;
+}
+
+/* Clean up transform and transition CSS */
+:root {
+  /* Define a single source of truth for all transform variables */
+  --rotate-y-0: rotateY(0deg);
+  --rotate-y-180: rotateY(180deg);
+  --translate-x-0: translateX(0);
+  --translate-x-full: translateX(100%);
+  --translate-x-neg-full: translateX(-100%);
+  
+  /* Define transition durations as variables */
+  --transition-fast: 200ms;
+  --transition-medium: 300ms;
+  --transition-slow: 500ms;
+  --transition-slower: 700ms;
+  
+  /* Define transition timings */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Core transform classes */
+.rotate-y-0 {
+  transform: var(--rotate-y-0) !important;
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: var(--rotate-y-180) !important;
+  backface-visibility: hidden;
+}
+
+.translate-x-0 {
+  transform: var(--translate-x-0) !important;
+}
+
+.translate-x-full {
+  transform: var(--translate-x-full) !important;
+}
+
+.-translate-x-full {
+  transform: var(--translate-x-neg-full) !important;
+}
+
+/* Utility classes for transitions */
+.transition-transform {
+  transition-property: transform;
+  transition-timing-function: var(--ease-standard);
+  transition-duration: var(--transition-medium);
+  will-change: transform;
+}
+
+.transition-colors {
+  transition-property: background-color, color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--ease-standard);
+  transition-duration: var(--transition-medium);
+}
+
+.transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: var(--ease-standard);
+  transition-duration: var(--transition-medium);
+  will-change: opacity;
+}
+
+.transition-all {
+  transition-property: all;
+  transition-timing-function: var(--ease-standard);
+  transition-duration: var(--transition-medium);
+}
+
+/* Duration utility classes */
+.duration-100 { transition-duration: 100ms; }
+.duration-200 { transition-duration: 200ms; }
+.duration-300 { transition-duration: 300ms; }
+.duration-500 { transition-duration: 500ms; }
+.duration-700 { transition-duration: 700ms; }
+.duration-1000 { transition-duration: 1000ms; }
+
+/* Helper classes for 3D transforms */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden !important;
+}
+
+/* Clean grayscale mode CSS by using actual styles rather than empty rules */
+.grayscale-mode:not(.retro-mode) {
+  background-color: #f5f5f5;
+}
+
+/* Replace empty rules with proper style definitions */
+.grayscale-mode:not(.retro-mode) .preserve-transitions {
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+/* Replace empty rules with proper style definitions */
+.grayscale-mode:not(.retro-mode) .flip-animation {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+/* Replace empty rules with proper style definitions */
+.grayscale-mode:not(.retro-mode) .slide-transition {
+  transition: transform 0.5s ease;
 }
