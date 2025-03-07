@@ -68,6 +68,22 @@ The only requirement is having Node.js & npm installed - [install with nvm](http
 
 ## Version History
 
+### v3.0.0
+- Complete slider component rebuild with improved functionality
+- Fixed theme handling across all color modes (light, dark, grayscale, retro)
+- Added visual indicators for toggle buttons in grayscale mode
+- Improved vertical centering and layout in content display
+- Enhanced visibility of UI controls in dark grayscale mode
+- Fixed z-index and visibility management with FlipContext
+- Simplified DOM structure for better performance
+- Added error boundaries for improved stability
+
+### v2.2.0
+- Updated slider layout with unified design
+- Improved flip transitions
+- Fixed EmptyBox flickering in dark mode
+- Enhanced grid alignment
+
 ### v1.1.0
 - Updated dark mode color scheme
 - Added softer colors for improved readability
