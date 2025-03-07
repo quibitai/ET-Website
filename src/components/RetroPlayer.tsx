@@ -1,18 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import { useTheme } from '../theme';
+import { useRetro } from '../contexts/RetroContext';
 
-/**
- * RetroPlayer Component
- * 
- * Plays "What is Love" music when in retro mode
- * Only appears in retro mode and doesn't affect other themes
- */
 const RetroPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const { isRetro } = useTheme();
+  const { isRetro } = useRetro();
 
-  // Attempt to autoplay when retro mode is enabled
   useEffect(() => {
     if (isRetro && audioRef.current) {
       audioRef.current.play()
@@ -24,13 +17,6 @@ const RetroPlayer = () => {
           setIsPlaying(false);
         });
     }
-    
-    // Pause when leaving retro mode
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-    };
   }, [isRetro]);
 
   const togglePlay = () => {

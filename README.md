@@ -68,6 +68,13 @@ The only requirement is having Node.js & npm installed - [install with nvm](http
 
 ## Version History
 
+### v3.1.0
+- Refined intro animation with smooth zoom and fade effect
+- Eliminated animation jumpiness for a more professional experience
+- Improved animation timing and synchronization
+- Enhanced overall loading experience with seamless transitions
+- Updated animation easing functions for natural motion
+
 ### v3.0.0
 - Complete slider component rebuild with improved functionality
 - Fixed theme handling across all color modes (light, dark, grayscale, retro)

@@ -60,7 +60,7 @@ const Index = () => {
     setTimeout(() => {
       setShowIntro(false);
       setAnimationRemoved(true);
-    }, 3600);
+    }, 2800); // Adjusted to match our new smoother animation duration
   };
 
   // Set loaded state after content appears
@@ -116,8 +116,6 @@ const Index = () => {
       >
         <div className="mx-auto p-4 md:p-6 max-w-screen-2xl">
           <Header initiallyHidden={!animationComplete} />
-          
-          {/* Only show RetroPlayer in retro mode */}
           {isRetro && <RetroPlayer />}
 
           <FlipProvider>

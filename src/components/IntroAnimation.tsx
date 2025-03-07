@@ -6,7 +6,7 @@ interface IntroAnimationProps {
 }
 
 const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) => {
-  const [animationStage, setAnimationStage] = useState<"initial" | "zoom" | "shake" | "explode" | "complete">("initial");
+  const [animationStage, setAnimationStage] = useState<"initial" | "zoom" | "fadeOut" | "complete">("initial");
   const hasRunRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -28,21 +28,16 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
     hasRunRef.current = true;
     
     // Wait for component to mount
-    await new Promise(resolve => setTimeout(resolve, 800));
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     // Start zoom animation
     setAnimationStage("zoom");
     
-    // After zoom completes, start shake animation
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setAnimationStage("shake");
+    // After zoom completes, start fade out animation
+    await new Promise(resolve => setTimeout(resolve, 2200));
+    setAnimationStage("fadeOut");
     
-    // After shake animation, start explosion
-    await new Promise(resolve => setTimeout(resolve, 800));
-    setAnimationStage("explode");
-    
-    // After explosion starts, signal completion
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Signal completion as fade out starts
     onAnimationComplete();
     
     // Keep the animation component visible until the main content is fully loaded
@@ -63,48 +58,32 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
     }
   }, [runAnimationSequence, onAnimationComplete]);
 
-  // Define the letters of "echotango"
-  const letters = "echotango".split("");
-  
-  // Generate random directions for each letter with more extreme values
-  // Using a ref to ensure consistent values between renders
-  const letterDirectionsRef = useRef(letters.map(() => ({
-    x: Math.random() * 3000 - 1500,
-    y: Math.random() * 3000 - 1500,
-    rotate: Math.random() * 1080 - 540,
-    scale: Math.random() * 1.5 + 0.5
-  })));
-
   // Get container animation based on current stage
   const getContainerAnimation = () => {
     if (animationStage === "zoom") {
       return { 
-        scale: [1, 1.5, 2.2, 2.5, 2.8] 
+        scale: 2.8 
       };
-    } else if (animationStage === "shake") {
+    } else if (animationStage === "fadeOut") {
       return {
-        scale: 2.8,
-        x: [0, -10, 12, -15, 15, -12, 10, -8, 8, -5, 5, 0],
-        y: [0, 5, -6, 8, -8, 6, -4, 4, -2, 2, 0],
-        rotate: [0, -2, 3, -3, 3, -2, 2, -1, 1, 0]
+        scale: 3.2,
+        opacity: 0
       };
     }
-    return { scale: 2.8 };
+    return { scale: 1 };
   };
 
   // Get transition for the container based on animation stage
   const getContainerTransition = () => {
     if (animationStage === "zoom") {
       return {
-        duration: 2.0,
-        ease: [0.25, 0.1, 0.25, 1.0],
-        times: [0, 0.2, 0.5, 0.7, 1]
+        duration: 2.2,
+        ease: "easeOut"
       };
-    } else if (animationStage === "shake") {
+    } else if (animationStage === "fadeOut") {
       return {
-        duration: 0.8,
-        ease: "easeInOut",
-        times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+        duration: 1.8,
+        ease: "easeInOut"
       };
     }
     return { duration: 0.5 };
@@ -123,10 +102,15 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
         fontSize: "6rem",
         opacity: 1
       };
+    } else if (animationStage === "fadeOut") {
+      return {
+        fontSize: "6rem",
+        opacity: 0
+      };
     } else {
       return {
-        fontSize: "6rem", // Keep font size consistent after zoom
-        opacity: 1
+        fontSize: "6rem",
+        opacity: 0
       };
     }
   };
@@ -135,8 +119,13 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
   const getTextTransition = () => {
     if (animationStage === "zoom") {
       return {
-        duration: 2.0,
-        ease: [0.25, 0.1, 0.25, 1.0]
+        duration: 2.2,
+        ease: "easeOut"
+      };
+    } else if (animationStage === "fadeOut") {
+      return {
+        duration: 1.8,
+        ease: "easeInOut"
       };
     }
     return {
@@ -152,75 +141,34 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
           className="fixed inset-0 flex items-center justify-center z-50 bg-[#F5F5F5] dark:bg-[#16192E]"
           initial={{ opacity: 1 }}
           animate={{ 
-            opacity: animationStage === "explode" ? 0 : 1 
+            opacity: animationStage === "fadeOut" ? 0 : 1 
           }}
           exit={{ opacity: 0 }}
           transition={{ 
-            duration: animationStage === "explode" ? 2.0 : 0.5,
-            ease: "easeInOut",
-            opacity: { delay: 1.2 }
+            duration: animationStage === "fadeOut" ? 1.8 : 0.5,
+            ease: "easeInOut"
           }}
           aria-live="polite"
           aria-atomic="true"
           role="status"
         >
-          {animationStage !== "explode" ? (
-            <motion.div
-              ref={containerRef}
-              className="relative"
-              initial={{ scale: 1 }}
-              animate={getContainerAnimation()}
-              transition={getContainerTransition()}
+          <motion.div
+            ref={containerRef}
+            className="relative"
+            initial={{ scale: 1, opacity: 1 }}
+            animate={getContainerAnimation()}
+            transition={getContainerTransition()}
+          >
+            <motion.h1 
+              className="text-[#FF3B31] dark:text-[#FF7A6E] font-bold tracking-tighter"
+              initial={{ fontSize: "2rem", opacity: 0 }}
+              animate={getTextAnimation()}
+              transition={getTextTransition()}
+              aria-label="Echo Tango logo animation"
             >
-              <motion.h1 
-                className="text-[#FF3B31] dark:text-[#FF7A6E] font-bold tracking-tighter"
-                initial={{ fontSize: "2rem", opacity: 0 }}
-                animate={getTextAnimation()}
-                transition={getTextTransition()}
-                aria-label="Echo Tango logo animation"
-              >
-                echotango
-              </motion.h1>
-            </motion.div>
-          ) : (
-            <div className="relative" aria-label="Echo Tango logo exploding animation">
-              {letters.map((letter, index) => (
-                <motion.span
-                  key={index}
-                  className="absolute text-[#FF3B31] dark:text-[#FF7A6E] font-bold text-6xl tracking-tighter"
-                  style={{ 
-                    originX: 0.5,
-                    originY: 0.5,
-                    display: 'inline-block',
-                    left: `${index * 40}px`,
-                    top: 0
-                  }}
-                  initial={{ 
-                    opacity: 1,
-                    x: 0,
-                    y: 0,
-                    rotate: 0,
-                    scale: 2.8
-                  }}
-                  animate={{ 
-                    opacity: 0,
-                    x: letterDirectionsRef.current[index].x,
-                    y: letterDirectionsRef.current[index].y,
-                    rotate: letterDirectionsRef.current[index].rotate,
-                    scale: letterDirectionsRef.current[index].scale
-                  }}
-                  transition={{ 
-                    duration: 2.5, // Increased for smoother animation
-                    ease: [0.16, 1, 0.3, 1], // Improved easing for smoother explosion
-                    delay: index * 0.02 // Slightly reduced for more simultaneous explosion
-                  }}
-                  aria-hidden="true" // Hide from screen readers as it's decorative
-                >
-                  {letter}
-                </motion.span>
-              ))}
-            </div>
-          )}
+              echotango
+            </motion.h1>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
