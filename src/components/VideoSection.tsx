@@ -87,10 +87,6 @@ const VideoModal = ({ onClose, videoUrl }: { onClose: () => void, videoUrl: stri
             title="Echo Tango 2025 Reel"
           />
         </div>
-        
-        <div className="text-center mt-4">
-          <h3 className="text-white text-base font-medium">Unmute</h3>
-        </div>
       </div>
     </div>,
     document.body

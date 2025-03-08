@@ -203,15 +203,23 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
 /* Retro Mode Styles */
 @layer components {
   .retro-mode {
-    @apply relative;
-    background: #000066;
-    background-image: url("data:image/gif;base64,R0lGODlhFAAUAIAAAP///wAAACH5BAEAAAAALAAAAAAUABQAAAIRhI+py+0Po5y02ouz3rz7rxUAOw==");
-    min-height: 100vh;
-    overflow-x: hidden;
+    background-color: #0000aa !important;
+    font-family: 'VT323', monospace !important;
+    color: white !important;
+    cursor: url('/cursor/retro.cur'), auto !important;
+    
+    /* Removing retro player styles */
+    
+    /* Other retro styles */
+    .construction {
+      margin-right: 10px;
+      display: inline-block;
+    }
+    
+    /* ... other retro-mode styles ... */
   }
 
   .retro-mode * {
-    font-family: 'VT323', monospace;
     @apply transition-all duration-300 ease-in-out;
   }
 
@@ -271,9 +279,7 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
   }
 
   .retro-mode button:hover {
-    @apply border-yellow-200;
-    background: linear-gradient(45deg, #000088, #0000aa);
-    box-shadow: 0 0 15px rgba(255, 255, 0, 0.7);
+    text-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
   }
 
   .retro-mode .slider-box {
@@ -281,24 +287,11 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
     line-height: 1.3;
   }
 
-  .retro-mode .visitor-counter {
-    @apply text-yellow-300 text-sm flex items-center gap-2;
-    text-shadow: 1px 1px 0 #000;
-    position: fixed;
-    bottom: 1rem;
-    left: 1rem;
-    z-index: 50;
-  }
 
   .retro-mode .social-container {
     @apply flex justify-between items-center mt-4;
   }
 
-  .retro-mode .construction {
-    width: 16px;
-    height: 16px;
-    image-rendering: pixelated;
-  }
 
   .shadow-glow {
     box-shadow: 0 0 10px rgba(255, 255, 0, 0.5),
@@ -309,18 +302,10 @@ html.grayscale-mode:not(.dark):not(.retro-mode) .border-r-\[\#FF7A6E\] {
     text-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
   }
 
-  /* Retro player styles */
-  .retro-mode .retro-player {
-    font-family: 'VT323', monospace;
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    z-index: 50;
-  }
+  /* Removing RetroPlayer styles */
 
   .retro-mode button {
     font-size: 1.2rem;
-    line-height: 1;
   }
 
   .retro-mode audio {

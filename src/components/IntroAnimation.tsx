@@ -6,7 +6,7 @@ interface IntroAnimationProps {
 }
 
 const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) => {
-  const [animationStage, setAnimationStage] = useState<"initial" | "zoom" | "fadeOut" | "complete">("initial");
+  const [animationStage, setAnimationStage] = useState<"initial" | "animating" | "complete">("initial");
   const hasRunRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -30,18 +30,17 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
     // Wait for component to mount
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    // Start zoom animation
-    setAnimationStage("zoom");
+    // Start combined zoom and fade animation
+    setAnimationStage("animating");
     
-    // After zoom completes, start fade out animation
-    await new Promise(resolve => setTimeout(resolve, 2200));
-    setAnimationStage("fadeOut");
+    // Signal completion partway through the animation
+    // This allows the main content to start fading in while the intro is still animating out
+    setTimeout(() => {
+      onAnimationComplete();
+    }, 1500);
     
-    // Signal completion as fade out starts
-    onAnimationComplete();
-    
-    // Keep the animation component visible until the main content is fully loaded
-    await new Promise(resolve => setTimeout(resolve, 1800));
+    // Keep the animation component visible for the duration of the animation
+    await new Promise(resolve => setTimeout(resolve, 3000));
     setAnimationStage("complete");
   }, [onAnimationComplete]);
   
@@ -58,82 +57,6 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
     }
   }, [runAnimationSequence, onAnimationComplete]);
 
-  // Get container animation based on current stage
-  const getContainerAnimation = () => {
-    if (animationStage === "zoom") {
-      return { 
-        scale: 2.8 
-      };
-    } else if (animationStage === "fadeOut") {
-      return {
-        scale: 3.2,
-        opacity: 0
-      };
-    }
-    return { scale: 1 };
-  };
-
-  // Get transition for the container based on animation stage
-  const getContainerTransition = () => {
-    if (animationStage === "zoom") {
-      return {
-        duration: 2.2,
-        ease: "easeOut"
-      };
-    } else if (animationStage === "fadeOut") {
-      return {
-        duration: 1.8,
-        ease: "easeInOut"
-      };
-    }
-    return { duration: 0.5 };
-  };
-
-  // Get text animation properties based on current stage
-  const getTextAnimation = () => {
-    // Always maintain the same font size after initial zoom
-    if (animationStage === "initial") {
-      return {
-        fontSize: "2rem",
-        opacity: 0
-      };
-    } else if (animationStage === "zoom") {
-      return {
-        fontSize: "6rem",
-        opacity: 1
-      };
-    } else if (animationStage === "fadeOut") {
-      return {
-        fontSize: "6rem",
-        opacity: 0
-      };
-    } else {
-      return {
-        fontSize: "6rem",
-        opacity: 0
-      };
-    }
-  };
-
-  // Get text transition properties based on current stage
-  const getTextTransition = () => {
-    if (animationStage === "zoom") {
-      return {
-        duration: 2.2,
-        ease: "easeOut"
-      };
-    } else if (animationStage === "fadeOut") {
-      return {
-        duration: 1.8,
-        ease: "easeInOut"
-      };
-    }
-    return {
-      duration: 0.5,
-      ease: "easeInOut"
-    };
-  };
-
   return (
     <AnimatePresence mode="wait">
       {animationStage !== "complete" && (
@@ -141,12 +64,16 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
           className="fixed inset-0 flex items-center justify-center z-50 bg-[#F5F5F5] dark:bg-[#16192E]"
           initial={{ opacity: 1 }}
           animate={{ 
-            opacity: animationStage === "fadeOut" ? 0 : 1 
+            opacity: animationStage === "animating" ? 0 : 1 
           }}
           exit={{ opacity: 0 }}
           transition={{ 
-            duration: animationStage === "fadeOut" ? 1.8 : 0.5,
-            ease: "easeInOut"
+            duration: 3,
+            ease: "easeInOut",
+            opacity: {
+              delay: 1.5,  // Start fading the background after the zoom has progressed
+              duration: 1.5
+            }
           }}
           aria-live="polite"
           aria-atomic="true"
@@ -156,14 +83,40 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onAnimationComplete }) 
             ref={containerRef}
             className="relative"
             initial={{ scale: 1, opacity: 1 }}
-            animate={getContainerAnimation()}
-            transition={getContainerTransition()}
+            animate={{ 
+              scale: animationStage === "animating" ? 3.2 : 1,
+              opacity: animationStage === "animating" ? 0 : 1
+            }}
+            transition={{
+              duration: 3,
+              ease: [0.25, 0.1, 0.25, 1], // Custom cubic-bezier for a smooth, natural motion
+              scale: {
+                duration: 3
+              },
+              opacity: {
+                delay: 1.5, // Start fading after the zoom has progressed
+                duration: 1.5
+              }
+            }}
           >
             <motion.h1 
               className="text-[#FF3B31] dark:text-[#FF7A6E] font-bold tracking-tighter"
               initial={{ fontSize: "2rem", opacity: 0 }}
-              animate={getTextAnimation()}
-              transition={getTextTransition()}
+              animate={{ 
+                fontSize: "6rem", 
+                opacity: animationStage === "initial" ? 0 : 
+                         animationStage === "animating" ? [0, 1, 0] : 0
+              }}
+              transition={{
+                duration: 3,
+                opacity: {
+                  times: [0, 0.2, 1],
+                  duration: 3
+                },
+                fontSize: {
+                  duration: 1.5
+                }
+              }}
               aria-label="Echo Tango logo animation"
             >
               echotango

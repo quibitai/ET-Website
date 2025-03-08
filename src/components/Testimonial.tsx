@@ -14,7 +14,7 @@ const Testimonial: React.FC = () => {
       className="p-3 sm:p-4 md:p-6 lg:p-8 h-full flex items-center"
       style={{ backgroundColor }}
     >
-      <div className="w-full">
+      <div className="w-full mx-auto max-w-[90%]">
         <blockquote 
           className="font-serif text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl leading-tight mb-2 sm:mb-4 md:mb-6"
           style={{ color: primaryColor }}

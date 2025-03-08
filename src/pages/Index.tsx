@@ -1,10 +1,12 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect, useCallback, useRef, lazy, Suspense } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import FlippableGrid from "../components/FlippableGrid/FlippableGrid";
 import Header from "../components/Header";
 import ContactForm from "../components/ContactForm";
 import Testimonial from "../components/Testimonial";
 import SocialLinks from "../components/SocialLinks";
+import HeroVideoDialog from "../components/HeroVideoDialog";
 import IntroAnimation from "../components/IntroAnimation";
-import RetroPlayer from "../components/RetroPlayer";
 import { useRetro } from '../contexts/RetroContext';
 import EmptyBox from "../components/EmptyBox";
 import IndustryTerm from "../components/IndustryTerm";
@@ -116,7 +118,6 @@ const Index = () => {
       >
         <div className="mx-auto p-4 md:p-6 max-w-screen-2xl">
           <Header initiallyHidden={!animationComplete} />
-          {isRetro && <RetroPlayer />}
 
           <FlipProvider>
             <GridContent
@@ -210,18 +211,6 @@ const GridContent = ({ contentItems, randomTerm, bgColor, isRetro }) => {
           {/* Bottom row */}
           <FlippableGridCell index={7} className="col-span-1 border-r-0 sm:border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
             <ContactForm />
-            {isRetro && (
-              <div className="visitor-counter">
-                <img 
-                  src="data:image/gif;base64,R0lGODlhEAAQALMAAAAAAP///+7u7t3d3bu7u6qqqpmZmYiIiHd3d2ZmZlVVVURERDMzMyIiIhEREQAAACH+AS4ALAAAAAAQABAAAARFEMj3gL0P4pzUMIqrcB0XBuIYjgNWnIWVJMqVkgGYQEHQhLwwfBaYBYP5gUAQ1GWBXhZIyfgVQTEpKFSi2CwWg+VqtQgAOw==" 
-                  alt="Under Construction"
-                  className="construction"
-                />
-                <div>
-                  Visitors: {localStorage.getItem('visitor-count')?.padStart(6, '0') || '000000'}
-                </div>
-              </div>
-            )}
           </FlippableGridCell>
           
           <FlippableGridCell index={8} className="col-span-1 border-r-0 sm:border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">

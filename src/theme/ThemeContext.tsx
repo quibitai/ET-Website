@@ -42,36 +42,13 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  // Initialize state from localStorage if available, or default to light mode
-  const [colorMode, setColorModeState] = useState<ColorMode>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('color-mode') as ColorMode) || 'light';
-    }
-    return 'light';
-  });
+  // Always initialize with light mode regardless of local storage
+  const [colorMode, setColorModeState] = useState<ColorMode>('light');
 
-  // Initialize visual mode from localStorage if available, or default to grayscale mode
-  const [visualMode, setVisualModeState] = useState<VisualMode>(() => {
-    if (typeof window !== 'undefined') {
-      // Check if we have a stored preference - note we now use a new class name to avoid conflicts
-      const storedRetro = localStorage.getItem('retro-mode');
-      const storedGrayscale = localStorage.getItem('grayscale-mode-new');
-      
-      // If we have stored preferences, use them
-      if (storedRetro === 'true') return 'retro';
-      if (storedGrayscale === 'false') return 'standard';
-      if (storedGrayscale === 'true') return 'grayscale';
-    }
-    // Default to standard mode - this can be changed if grayscale should be default
-    return 'standard';
-  });
+  // Always initialize with grayscale mode regardless of local storage
+  const [visualMode, setVisualModeState] = useState<VisualMode>('grayscale');
 
-  const [resolvedColorMode, setResolvedColorMode] = useState<'light' | 'dark'>(() => {
-    if (colorMode === 'system') {
-      return getSystemColorPreference();
-    }
-    return colorMode as 'light' | 'dark';
-  });
+  const [resolvedColorMode, setResolvedColorMode] = useState<'light' | 'dark'>('light');
 
   // Update color mode
   const setColorMode = useCallback((mode: ColorMode) => {
