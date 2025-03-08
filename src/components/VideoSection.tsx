@@ -27,6 +27,7 @@ const VideoModal = ({ onClose, videoUrl }: { onClose: () => void, videoUrl: stri
   // Store the original grayscale state to restore it on close
   const [wasGrayscaleEnabled, setWasGrayscaleEnabled] = useState(false);
   const grayscaleRef = useRef(false);
+  const modalContentRef = useRef<HTMLDivElement>(null);
 
   // On mount, check if grayscale is active and disable it temporarily
   useEffect(() => {
@@ -62,16 +63,25 @@ const VideoModal = ({ onClose, videoUrl }: { onClose: () => void, videoUrl: stri
     onClose();
   };
   
+  // Handle clicks on the backdrop
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Only close if clicking directly on the backdrop (not its children)
+    if (e.target === e.currentTarget) {
+      handleClose();
+    }
+  };
+  
   // Create a portal to render this outside the normal DOM flow
   return ReactDOM.createPortal(
     <div 
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80" 
       style={{ backdropFilter: 'blur(5px)' }}
+      onClick={handleBackdropClick}
     >
-      <div className="relative w-full max-w-4xl mx-auto px-4">
+      <div className="relative w-full max-w-4xl mx-auto px-4" ref={modalContentRef}>
         <button 
           onClick={handleClose}
-          className="absolute -top-10 right-2 z-50 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors"
+          className="absolute -top-10 right-2 z-50 text-white p-2 hover:text-gray-300 transition-colors"
           aria-label="Close video"
         >
           <X size={24} />
