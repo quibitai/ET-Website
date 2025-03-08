@@ -25,6 +25,16 @@ export const FlipProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
   
+  // Shuffle array function to randomize cell order
+  const shuffleArray = (array: number[]) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+  
   // Create robust setFlipped function
   const setFlipped = useCallback((state: boolean) => {
     console.log(`FlipContext: Setting flipped state to ${state}`);
@@ -41,45 +51,47 @@ export const FlipProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     console.log(`FlipContext: Main flip state changed to ${isFlipped}`);
     
+    // Create array of cell indices and shuffle them for random order
+    const cellIndices = shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    
     if (isFlipped) {
       // Flip to "work" view
-      const delays: Record<number, number> = {};
       const newStates: Record<number, boolean> = {};
       
       // Set up initial state
       for (let i = 1; i <= 9; i++) {
-        delays[i] = getRandomDelay(50, 300);
         newStates[i] = false;
       }
       
       // Apply initial state immediately
       setCellFlipStates(newStates);
       
-      // Then apply timed transitions for each cell
-      for (let i = 1; i <= 9; i++) {
+      // Then apply timed transitions in random order with variable delays
+      cellIndices.forEach((cellIndex, i) => {
+        // Use a wider range of delays for more varied effect
+        const delay = getRandomDelay(50, 450);
         setTimeout(() => {
-          console.log(`FlipContext: Flipping cell ${i} to true`);
+          console.log(`FlipContext: Flipping cell ${cellIndex} to true`);
           setCellFlipStates(prev => ({
             ...prev,
-            [i]: true
+            [cellIndex]: true
           }));
-        }, delays[i]);
-      }
+        }, delay);
+      });
     } else {
       // Flip back to "home" view
-      const delays: Record<number, number> = {};
-      
-      // Apply timed transitions for each cell
-      for (let i = 1; i <= 9; i++) {
-        delays[i] = getRandomDelay(50, 200);
+      // Use different random order for flipping back
+      cellIndices.forEach((cellIndex, i) => {
+        // Use a wider range of delays for more varied effect
+        const delay = getRandomDelay(50, 350);
         setTimeout(() => {
-          console.log(`FlipContext: Flipping cell ${i} to false`);
+          console.log(`FlipContext: Flipping cell ${cellIndex} to false`);
           setCellFlipStates(prev => ({
             ...prev,
-            [i]: false
+            [cellIndex]: false
           }));
-        }, delays[i]);
-      }
+        }, delay);
+      });
     }
   }, [isFlipped]);
   
