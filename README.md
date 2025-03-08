@@ -68,6 +68,14 @@ The only requirement is having Node.js & npm installed - [install with nvm](http
 
 ## Version History
 
+### v3.2.0
+- Fixed flipping transitions with randomized delays for grid cells
+- Enhanced video thumbnails with full bleed design (removed borders)
+- Improved close button design for video players with a cleaner, more minimal appearance
+- Updated video content and thumbnail mappings
+- Fixed grid cell animation inconsistencies
+- Optimized component rerendering for smoother transitions
+
 ### v3.1.0
 - Refined intro animation with smooth zoom and fade effect
 - Eliminated animation jumpiness for a more professional experience
