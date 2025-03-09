@@ -164,23 +164,25 @@
 /* Content formatting */
 .content-display-title {
   font-family: 'Freight Display Pro', serif;
-  font-size: 58px;
+  font-size: clamp(20px, 4vw + 10px, 60px);
   line-height: 1.2;
   color: #FF3B31;
-  margin-bottom: 0;
+  margin-bottom: clamp(6px, 1vw, 15px);
   font-weight: normal;
   width: 100%;
-  position: relative; /* Keep the title fixed */
-  z-index: 5; /* Ensure title stays on top */
+  position: relative;
+  z-index: 5;
 }
 
 .content-display-content {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.6;
   color: #FF3B31;
   width: 100%;
   animation: fadeIn 0.5s ease-in-out;
+  max-height: none;
+  overflow: visible;
 }
 
 .content-display-highlight {
@@ -197,37 +199,105 @@
 }
 
 /* Media queries for responsive sizes */
-@media (max-width: 768px) {
+/* Mobile and medium styles (anything below lg breakpoint) */
+@media (max-width: 1023px) {
   .content-display-inner {
-    padding: 50px 60px 30px; /* Increase top padding on mobile */
+    padding: 30px 20px 80px;
     width: 100%;
     justify-content: flex-start;
+    position: relative;
   }
   
   .content-display-title-container {
-    margin-bottom: 50px; /* Increase margin on mobile */
-    min-height: 100px; /* Smaller fixed height on mobile */
-    justify-content: flex-end; /* Align title to bottom on mobile too */
-    padding-top: 15px; /* Less top padding on mobile */
+    margin-bottom: 20px;
+    min-height: 60px;
+    justify-content: flex-end;
+    padding-top: 10px;
   }
   
   .content-display-title {
-    font-size: 32px;
+    font-size: 24px;
+    line-height: 1.2;
     width: 100%;
+    word-break: break-word;
+    hyphens: auto;
+    margin-bottom: 15px;
   }
   
   .content-display-content {
-    font-size: 18px;
+    font-size: 15px;
+    line-height: 1.5;
     width: 100%;
+    padding: 0 10px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+    margin-bottom: 50px;
+    overflow: visible;
   }
   
   .content-display-nav {
     bottom: 1.5rem;
-    gap: 2rem;
+    gap: 3rem;
+    width: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
   }
   
   .content-display-arrow {
-    font-size: 30px;
+    font-size: 24px;
+    width: 2.5rem;
+    height: 2.5rem;
+    opacity: 0.9;
+  }
+}
+
+/* Special medium viewports adjustment to prevent text overlapping arrows */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .content-display-inner {
+    padding: 25px 20px 80px;
+  }
+  
+  .content-display-title-container {
+    margin-bottom: 15px;
+    min-height: 50px;
+  }
+  
+  .content-display-title {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+  
+  .content-display-content {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 60px;
+  }
+  
+  .content-display-nav {
+    bottom: 1.25rem;
+  }
+}
+
+/* Even smaller screens */
+@media (max-width: 480px) {
+  .content-display-inner {
+    padding: 30px 15px 80px;
+  }
+  
+  .content-display-title {
+    font-size: 24px;
+  }
+  
+  .content-display-content {
+    font-size: 14px;
+    margin-bottom: 60px;
+  }
+  
+  .content-display-nav {
+    bottom: 1rem;
+    gap: 2.5rem;
   }
 }
 

@@ -5,6 +5,7 @@ import { X } from 'lucide-react';
 
 interface VideoThumbnailProps {
   index: number;
+  showText?: boolean;
 }
 
 interface VideoModalProps {
@@ -99,7 +100,7 @@ const VideoModal = ({ onClose, videoUrl }: VideoModalProps) => {
   );
 };
 
-const VideoThumbnail: React.FC<VideoThumbnailProps> = ({ index }) => {
+const VideoThumbnail: React.FC<VideoThumbnailProps> = ({ index, showText = false }) => {
   const { isDark, visualMode } = useTheme();
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -135,7 +136,7 @@ const VideoThumbnail: React.FC<VideoThumbnailProps> = ({ index }) => {
   return (
     <div className="h-full w-full">
       <div 
-        className="h-full w-full relative overflow-hidden cursor-pointer group"
+        className="relative w-full h-full overflow-hidden group cursor-pointer"
         onClick={openVideoModal}
       >
         {/* Thumbnail image */}
@@ -148,11 +149,11 @@ const VideoThumbnail: React.FC<VideoThumbnailProps> = ({ index }) => {
         {/* Play button overlay */}
         <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
           <div className="flex flex-col items-center justify-center">
-            <div className={`bg-[#F5F5F5] dark:bg-gray-900 rounded-full p-3 transform transition-transform group-hover:scale-110`}>
+            <div className={`bg-[#F5F5F5] dark:bg-gray-900 rounded-full p-3 md:p-4 transform transition-transform group-hover:scale-110`}>
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
                 viewBox="0 0 24 24" 
-                className={`w-6 h-6 ${
+                className={`w-6 h-6 md:w-7 md:h-7 ${
                   visualMode === 'grayscale' 
                     ? "text-[#333333] dark:text-[#DDDDDD]" 
                     : "text-[#FF3B31] dark:text-[#FF7A6E]"
@@ -162,6 +163,11 @@ const VideoThumbnail: React.FC<VideoThumbnailProps> = ({ index }) => {
                 <path d="M8 5v14l11-7z" />
               </svg>
             </div>
+            {showText && (
+              <div className="mt-2 text-white text-sm md:text-base font-medium">
+                play 2025 reel
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -28,7 +28,7 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({
   // Check for mobile view on mount and resize
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640);
+      setIsMobile(window.innerWidth < 768);
     };
     
     checkMobile();

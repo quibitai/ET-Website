@@ -148,22 +148,23 @@ const GridContent = ({ contentItems, randomTerm, bgColor, isRetro }) => {
   return (
     /* 3x3 Grid with consistent border treatment */
     <div className={`relative border-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] grid-border-animation`} data-borders-visible={bordersVisible}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 perspective-1000">
-        <div className="slider-flip-container col-span-1 sm:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" data-flipped={isFlipped}>
-          {/* Top-left 2x2 area for slider */}
-          <div className="col-span-1 sm:col-span-2 row-span-2 border-r-0 sm:border-r-3 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px] sm:h-[450px] lg:h-[600px] relative">
-            {/* Hidden flippable cells for the animation */}
-            <div className="absolute inset-0 grid grid-cols-1 sm:grid-cols-2 grid-rows-2 hidden-flip-cells opacity-0 pointer-events-none transition-opacity duration-300 z-10">
-              <FlippableGridCell index={1} className="border-r-0 sm:border-r-3 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[150px] sm:h-[225px] lg:h-[300px]">
+      {/* Change the grid breakpoints to use mobile layout until lg (1024px) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 perspective-1000">
+        <div className="slider-flip-container col-span-1 lg:col-span-3 grid grid-cols-1 lg:grid-cols-3" data-flipped={isFlipped}>
+          {/* Top-left 2x2 area for slider - Increased height for mobile view */}
+          <div className="col-span-1 lg:col-span-2 row-span-2 border-r-0 lg:border-r-3 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[400px] lg:h-[600px] relative">
+            {/* Hidden flippable cells for the animation - Update heights to match */}
+            <div className="absolute inset-0 grid grid-cols-1 lg:grid-cols-2 grid-rows-2 hidden-flip-cells opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+              <FlippableGridCell index={1} className="border-r-0 lg:border-r-3 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[200px] lg:h-[300px]">
                 <div></div>
               </FlippableGridCell>
-              <FlippableGridCell index={2} className="border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[150px] sm:h-[225px] lg:h-[300px]">
+              <FlippableGridCell index={2} className="border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[200px] lg:h-[300px]">
                 <div></div>
               </FlippableGridCell>
-              <FlippableGridCell index={3} className="border-r-0 sm:border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[150px] sm:h-[225px] lg:h-[300px]">
+              <FlippableGridCell index={3} className="border-r-0 lg:border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[200px] lg:h-[300px]">
                 <div></div>
               </FlippableGridCell>
-              <FlippableGridCell index={4} className="h-[150px] sm:h-[225px] lg:h-[300px]">
+              <FlippableGridCell index={4} className="h-[200px] lg:h-[300px]">
                 <div></div>
               </FlippableGridCell>
             </div>
@@ -188,7 +189,7 @@ const GridContent = ({ contentItems, randomTerm, bgColor, isRetro }) => {
           </div>
           
           {/* Top-right cell */}
-          <FlippableGridCell index={5} className="col-span-1 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px] sm:h-[450px] lg:h-[300px]">
+          <FlippableGridCell index={5} className="col-span-1 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px] lg:h-[300px]">
             <Suspense fallback={
               <div className={visualMode === 'grayscale' ? 'animate-pulse bg-[#333333]/20 dark:bg-[#DDDDDD]/20 h-full w-full' : 'animate-pulse bg-[#FF3B31]/20 dark:bg-[#FF7A6E]/20 h-full w-full'}>
               </div>
@@ -202,18 +203,19 @@ const GridContent = ({ contentItems, randomTerm, bgColor, isRetro }) => {
           {/* Third row cell (second column already covered by slider) */}
           <FlippableGridCell index={6} className="col-span-1 border-b-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
             <div className="h-full">
-              <div className={`${bgColor} p-4 sm:p-6 md:p-8 h-full flex items-center`}>
+              <div className={`${bgColor} p-4 lg:p-8 h-full flex items-center`}>
                 <IndustryTerm term={randomTerm} />
               </div>
             </div>
           </FlippableGridCell>
           
           {/* Bottom row */}
-          <FlippableGridCell index={7} className="col-span-1 border-r-0 sm:border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+          <FlippableGridCell index={7} className="col-span-1 border-r-0 lg:border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
             <ContactForm />
           </FlippableGridCell>
           
-          <FlippableGridCell index={8} className="col-span-1 border-r-0 sm:border-r-3 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
+          {/* Update EmptyBox cell with responsive borders - only on mobile */}
+          <FlippableGridCell index={8} className="col-span-1 border-r-0 lg:border-r-3 border-t-3 lg:border-t-0 border-b-3 lg:border-b-0 border-solid border-[#FF3B31] dark:border-[#FF7A6E] h-[300px]">
             <EmptyBox />
           </FlippableGridCell>
           
